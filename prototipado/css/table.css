@@ -1,0 +1,17 @@
+table thead{
+    background-color: #F8F9FC;
+}
+
+    thead tr{
+        color: #4E73DF;
+    }
+
+    tbody tr{
+        color: rgba(0, 0, 0, .7);
+    }
+
+    tbody tr .table-actions a{
+        color: #4285BB;
+        float: left;
+        margin-right: 20px;
+    }
