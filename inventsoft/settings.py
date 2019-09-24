@@ -25,7 +25,7 @@ SECRET_KEY = 'p^vic+aqc-h*_n=vbvcy(^wl)zth39auyqhk45@d!(&%61%7sc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apps.usuarios'
 ]
 
 MIDDLEWARE = [
@@ -73,14 +74,14 @@ WSGI_APPLICATION = 'inventsoft.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'inventsoft',
-        'USER': 'postgres',
-        'PASSWORD': 'paola123',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'inventsoft',
+#         'USER': 'postgres',
+#         'PASSWORD': 'paola123',
+#     }
+# }
 
 
 # Password validation
