@@ -2,3 +2,5 @@
 inventsoft/settings.py
 
 inventsoft/__pycache__/
+
+apps/usuarios/__init__.py
