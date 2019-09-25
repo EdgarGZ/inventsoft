@@ -1,5 +1,7 @@
+# Utilities
 import psycopg2
 from psycopg2 import pool
+
 
 threaded_postgreSQL_pool = psycopg2 \
     .pool.ThreadedConnectionPool(

@@ -1,47 +1,80 @@
 # Django
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
+
+
+# Decorators
+from apps.usuarios.decorators import login_required
+
 
 # Utilities
 import psycopg2
 import re
 
+
 # Conections
 from inventsoft.connections_pool import threaded_postgreSQL_pool
+
 
 # Auth
 from apps.usuarios.authentication import authenticate
 
-# Config
-from inventsoft.common import config
 
+# Views
 def render_login(request):
+    """
+        Render login function retrieves the login html
+    """
     return render(request, 'login.html')
 
+
 def login_user(request):
+    """
+        Login user do the login functionality by getting all the data by
+        the http verb POST.
+        We do some validations before to avoid errors.
+    """
     if request.method == 'POST':
+        data = {
+            'response': '', 
+            'status': 400
+        }
+        response = JsonResponse(data)
         username = request.POST['username']
         password = request.POST['password']
         regex_email = r'[a-z0-9._%+-]+@[a-z0-9.-]+[\\.][a-z]{2,}$'
-        regex_pass = r'[a-z0-9._%+-@=?¿]+@[a-z0-9.-]+[\\.][a-z]{2,}$'
-        if re.match(regex_email, username):
+        regex_pass = r'[a-z0-9._%+-@=?¿]'
+        if re.match(regex_email, username) and re.match(regex_pass, password):
             user = authenticate(username=username, password=password)
             if user:
-                config(user)
-                print(config(user).getUser()['emp_key'])
                 data = {
                     'response': user, 
                     'status': 200
                 }
-                return JsonResponse(data)
+                response = JsonResponse(data)
+                response.set_cookie('user', user)
+                return response
             else:
-                data = {
-                    'response': '', 
-                    'status': 400
-                }
-                return JsonResponse(data)
-    
+                response.set_cookie('user', user)
+                return response
+        else:
+            response.set_cookie('user', user)
+            return response
 
+
+@login_required
+def home(request):
+    """
+        Home function retrieves the home html
+    """
+    return render(request, 'home.html')
+
+
+@login_required
+def logout(request):
+    response = redirect('usuarios:render_login')
+    response.delete_cookie('user')
+    return response
 
     # if request.method == 'POST':
     #     username = request.POST['username']

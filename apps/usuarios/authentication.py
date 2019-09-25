@@ -1,13 +1,21 @@
 # Django
 from django.contrib.auth.hashers import check_password
 
+
 # Utilities
 import psycopg2
+
 
 # Conections
 from inventsoft.connections_pool import threaded_postgreSQL_pool
 
+
 def authenticate(username=None, password=None):
+    """
+        Authenticate function returns a user object or None.
+
+        It takes 2 parameters, a username and a passdword.
+    """
     try:
         tcp = threaded_postgreSQL_pool
         connection = tcp.getconn()

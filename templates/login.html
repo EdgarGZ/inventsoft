@@ -70,7 +70,7 @@
                 const parse_user = JSON.stringify(data.response);
                 const user = JSON.parse(parse_user)
                 localStorage.setItem('user', user)
-                alert('Bienvenido ' + user['first_name'])
+                window.location.href = '/home/'
             } else {
                 alert('Error')
             }
