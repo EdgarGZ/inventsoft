@@ -4,3 +4,7 @@ inventsoft/settings.py
 inventsoft/__pycache__/
 
 apps/usuarios/__init__.py
+
+apps/__pycache__/
+
+apps/usuarios/__pycache__/

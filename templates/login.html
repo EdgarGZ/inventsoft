@@ -69,7 +69,10 @@
             if(data.status === 200){
                 const parse_user = JSON.stringify(data.response);
                 const user = JSON.parse(parse_user)
-                alert('Bienvenido ' + user['username'])
+                localStorage.setItem('user', user)
+                alert('Bienvenido ' + user['first_name'])
+            } else {
+                alert('Error')
             }
         } catch (error) {
             alert(error)

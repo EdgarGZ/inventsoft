@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'inventsoft.wsgi.application'
 #         'ENGINE': 'django.db.backends.postgresql',
 #         'NAME': 'inventsoft',
 #         'USER': 'postgres',
-#         'PASSWORD': 'paola123',
+#         'PASSWORD': 'edgar123',
 #     }
 # }
 
@@ -101,7 +101,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
