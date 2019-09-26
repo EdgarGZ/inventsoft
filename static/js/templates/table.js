@@ -1,52 +1,54 @@
-{% load staticfiles %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Inventsoft - Inicio Sesión</title>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
-    <link rel="stylesheet" href="{% static 'css/table.css' %}">
-    <link href="https://fonts.googleapis.com/css?family=Sarabun:200,300,400,700,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-</head>
-<body>
-    <nav class="nav">
-        <label>&copy Inventsoft</label>
-        <div class="active-user-container">
-            <p>Bienvenido, <button id="active-user">Juan López</button></p>
+function ViewEmployeeTable(){
+    this.template = `
+        <div class="row main-row-container">
+            <div class="col-10 result-container">
+                <div class="result-title">
+                    <i class="fas fa-laptop"></i>
+                    <h2>Categoría</h2>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-container" id="table">
+                        <thead>
+                            <th scope="col">#</th>
+                            <th scope="col">Apellido Paterno</th>
+                            <th scope="col">Apellido Materno</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Correo</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>León</td>
+                                <td>Martínez</td>
+                                <td>Alejandro</td>
+                                <td>alejandro@gmail.com</td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>León</td>
+                                <td>Martínez</td>
+                                <td>Alejandro</td>
+                                <td>alejandro@gmail.com</td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>León</td>
+                                <td>Martínez</td>
+                                <td>Alejandro</td>
+                                <td>alejandro@gmail.com</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <a href="{% url 'usuarios:logout' %}">LogOut</a>
-    </nav>
+    `; 
+}
 
-    <section class="options-container">
-        <a href="" class="option">
-            <i class="fas fa-laptop"></i>
-            <span>Categoría</span>
-        </a>
-
-        <a href="" class="option">
-            <i class="fas fa-laptop"></i>
-            <span>Categoría</span>
-        </a>
-
-        <a href="" class="option">
-            <i class="fas fa-laptop"></i>
-            <span>Categoría</span>
-        </a>
-
-        <a href="" class="option">
-            <i class="fas fa-laptop"></i>
-            <span>Categoría</span>
-        </a>
-
-            
-    </section>
-
-    <div class="container-fluid main-container">
+function ViewAdminTable(){
+    this.template = `
         <div class="row main-row-container">
             <div class="col-10 result-container">
                 <div class="result-title">
@@ -57,7 +59,7 @@
                     <button class="result-option btn">Nuevo registro</button>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-container">
+                    <table class="table table-container" id="table">
                         <thead>
                             <th scope="col">#</th>
                             <th scope="col">Acciones</th>
@@ -82,7 +84,7 @@
                                 <td>Alejandro</td>
                                 <td>alejandro@gmail.com</td>
                             </tr>
-    
+
                             <tr>
                                 <th scope="row">2</th>
                                 <td class="table-actions">
@@ -98,7 +100,7 @@
                                 <td>Alejandro</td>
                                 <td>alejandro@gmail.com</td>
                             </tr>
-    
+
                             <tr>
                                 <th scope="row">3</th>
                                 <td class="table-actions">
@@ -119,7 +121,5 @@
                 </div>
             </div>
         </div>
-    </div>
-
-</body>
-</html>
+    `; 
+}

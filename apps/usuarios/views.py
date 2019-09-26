@@ -61,14 +61,26 @@ def login_user(request):
             response.set_cookie('user', user)
             return response
 
+@login_required
+def dashboard(request):
+    """
+        Dashboard function retrieves the dashboard html
+    """
+    return render(request, 'dashboard.html')
 
 @login_required
-def home(request):
+def table(request):
     """
-        Home function retrieves the home html
+        Table function retrieves the table html
     """
-    return render(request, 'home.html')
+    return render(request, 'table.html')
 
+@login_required
+def form(request):
+    """
+        Form function retrieves the form html
+    """
+    return render(request, 'form.html')
 
 @login_required
 def logout(request):

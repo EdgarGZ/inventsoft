@@ -1,15 +1,15 @@
-{% load static %}
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Inventsoft - Form</title>
+    <title>Inventsoft - Results</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
-    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/table.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Sarabun:200,300,400,700,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 </head>
@@ -19,6 +19,7 @@
         <div class="active-user-container">
             <p>Bienvenido, <button id="active-user">Juan López</button></p>
         </div>
+        <a href="{% url 'usuarios:logout' %}">LogOut</a>
     </nav>
 
     <section class="options-container">
@@ -50,8 +51,9 @@
 
 </body>
 
+<script src="{% static 'js/design-patterns/singletonUser.js' %}"></script>
 <script src="{% static 'js/design-patterns/factoryUserView.js' %}"></script>
-<script src="{% static 'js/templates/form.js' %}"></script>
+<script src="{% static 'js/templates/table.js' %}"></script>
 <script src="{% static 'js/functions.js' %}"></script>
 
 <script>
@@ -60,7 +62,11 @@
         // UserViewHome Factory
         // (UserType, HTMLContainer)
         let user = getUser();
-        factoryUserViewForm(user.type, 'main-container');
+        
+        // user = getSingletonInstance();
+        // console.log(user);
+
+        factoryUserViewTable(user.type, 'main-container');
     })();
 
 </script>
