@@ -9,6 +9,7 @@ from apps.usuarios.views import table
 from apps.usuarios.views import logout
 from apps.usuarios.views import dashboard
 from apps.usuarios.views import form
+from apps.usuarios.views import fetch_user
 
 # URLPatterns
 app_name='usuarios'
@@ -19,4 +20,5 @@ urlpatterns = [
     path('logout/', logout, name='logout'),
     path('dashboard/', dashboard, name='dashboard'),
     path('form/', form, name='form'),
+    path('get_user/', fetch_user, name='get_user')
 ]

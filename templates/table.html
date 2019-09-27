@@ -55,19 +55,43 @@
 <script src="{% static 'js/design-patterns/factoryUserView.js' %}"></script>
 <script src="{% static 'js/templates/table.js' %}"></script>
 <script src="{% static 'js/functions.js' %}"></script>
+<script src="{% static 'js/session.js' %}"></script>
 
 <script>
 
-    (function(){
+    (async function(){
         // UserViewHome Factory
         // (UserType, HTMLContainer)
-        let user = getUser();
-        
-        // user = getSingletonInstance();
-        // console.log(user);
+        // let user = getUser();
+        async function obtenerUser() {
+            const response = await fetch('/get_user/');
+            const data = await response.json()
+            return data;
+        }
+        userData = await obtenerUser();
+        console.log(typeof(JSON.parse(JSON.stringify(userData))));
 
-        factoryUserViewTable(user.type, 'main-container');
+        // userInstance = userSingleton.getInstance(userData);
+        // user = userInstance.getUser();
+
+        // console.log(user_n['user']);
     })();
+
+    //     userSingleton.removeInstance();
+    //     (() => {
+    //         fetch('/get_user/')
+    //         .then(async (res) => {
+    //             userData = await res.json();
+    //             // console.log(userData);
+    //             userInstance = userSingleton.getInstance("2");
+    //             user = userInstance.getUser();
+    //             return userData;
+    //         })
+    //     })();
+    //     console.log(user);
+
+    //     // factoryUserViewTable(user.type, 'main-container');
+    // })();
 
 </script>
 

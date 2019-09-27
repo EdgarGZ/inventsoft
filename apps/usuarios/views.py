@@ -83,6 +83,12 @@ def form(request):
     return render(request, 'form.html')
 
 @login_required
+def fetch_user(request):
+    user = dict(request.headers['Cookie'])
+    print(user)
+    return JsonResponse(user, safe=False)
+
+@login_required
 def logout(request):
     response = redirect('usuarios:render_login')
     response.delete_cookie('user')
