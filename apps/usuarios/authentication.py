@@ -45,19 +45,17 @@ def authenticate(username=None, password=None):
             tcp.putconn(connection)
             print("Threaded PostgreSQL connection pool is closed")
 
-def get_user(user_id):
+def get_user(user_id=None):
     try:
         tcp = threaded_postgreSQL_pool
         connection = tcp.getconn()
         cursor = connection.cursor()
-        query = f'SELECT * FROM employee WHERE emp_key = \'{user_id}\''
+        query = f'SELECT * FROM employee WHERE emp_key = {user_id}'
         cursor.execute(query)
         resp = cursor.fetchone()
         column_names = [desc[0] for desc in cursor.description]
         user_val = [value for value in resp]
-        user_val = zip(column_names, user_val)
         user = {column:user_val[i] for i, column in enumerate(column_names)}
-        user['backend'] = 'apps.usuarios.authentication.EmailAuthBackend'
         return user
     except Exception as e:
         return None

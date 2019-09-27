@@ -17,7 +17,7 @@ from inventsoft.connections_pool import threaded_postgreSQL_pool
 
 
 # Auth
-from apps.usuarios.authentication import authenticate
+from apps.usuarios.authentication import authenticate, get_user
 
 
 # Views
@@ -84,9 +84,15 @@ def form(request):
 
 @login_required
 def fetch_user(request):
-    user = dict(request.headers['Cookie'])
-    print(user)
-    return JsonResponse(user, safe=False)
+    cookie_user = request.COOKIES.get('user')
+    list_user = cookie_user.split('\' :')
+    user = str(list_user).split(':')
+    uid = user[1].split(',')
+    resp = get_user(user_id=uid[0])
+    data = {
+        'user': resp
+    }
+    return JsonResponse(data)
 
 @login_required
 def logout(request):

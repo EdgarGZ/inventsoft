@@ -40,8 +40,6 @@
     </div>
 </body>
 <script src="{% static 'js/design-patterns/singletonUser.js' %}"></script>
-<script src="{% static 'js/session.js' %}"></script>
-
 <script>
     const FORMLOGIN = document.getElementById('formLogin');
     const URL = 'http://127.0.0.1:8000/login/';
@@ -69,15 +67,7 @@
         try {
             const data = await mandarData(URL, form);
             console.log(data)
-            if(data.status === 200){
-                const user = JSON.stringify(data.response);
-                localStorage.setItem('user', user)
-
-                // userSingleton.removeInstance();
-                // userInstance = userSingleton.getInstance(data.response);
-                // user = userInstance.getUser();
-                // console.log(user);
-            
+            if(data.status === 200){            
                 window.location.href = '/table/';
             } else {
                 alert('Error')
