@@ -13,12 +13,12 @@ function ViewEmployeeForm(){
 function ViewAdminForm(){
     this.template = `
         <div class="row main-row-container">
-            <div class="col-10 result-container">
+            <div class="col-10 col-sm-6 col-lg-4 col-xl-4 result-container">
                 <div class="result-title">
                     <h2>Formulario Categoría</h2>
                 </div>
                 <div class="row row-form-container">
-                    <div class="col-10 col-sm-5 col-lg-4 col-xl-3 col-form-container">
+                    <div class="col-10 col-sm-10 col-lg-10 col-xl-8 col-form-container">
                         <div class="form-container">
                             <form action="" class="form">
                                 <input type="text" placeholder="Nombre:">

@@ -56,7 +56,8 @@ function ViewAdminTable(){
                     <h2>Categoría</h2>
                 </div>
                 <div class="result-options-container">
-                    <button class="result-option btn">Nuevo registro</button>
+                    <button class="result-option main-option btn">Nuevo registro</button>
+                    <button class="result-option other-option btn secondary-btn">Crear reporte</button>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-container" id="table">

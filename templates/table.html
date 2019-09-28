@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <link rel="stylesheet" href="{% static 'css/table.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Sarabun:200,300,400,700,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 </head>
@@ -17,10 +18,13 @@
     <nav class="nav">
         <label>&copy Inventsoft</label>
         <div class="active-user-container">
-            <p>Bienvenido, <button id="active-user">Juan López</button></p>
+            <p>Bienvenido, <button id="active-user">Usuario</button></p>
         </div>
-        <a href="{% url 'usuarios:logout' %}">LogOut</a>
     </nav>
+
+    <div class="nav-logout" id="nav-logout">
+        <a href="{% url 'usuarios:logout' %}">Cerrar Sesión</a>
+    </div>
 
     <section class="options-container">
         <a href="" class="option">
@@ -51,32 +55,26 @@
 
 </body>
 
-<script src="{% static 'js/design-patterns/singletonUser.js' %}"></script>
 <script src="{% static 'js/design-patterns/factoryUserView.js' %}"></script>
+<script src="{% static 'js/design-patterns/singletonUser.js' %}"></script>
 <script src="{% static 'js/templates/table.js' %}"></script>
 <script src="{% static 'js/functions.js' %}"></script>
-
+<script src="{% static 'js/styleFunctions.js' %}"></script>
 <script>
 
     (async function(){
-        async function obtenerUser() {
-            const response = await fetch('/get_user/');
-            const data = await response.json()
-            return data;
-        }
+        // Get user Singleton
+        const user = await getSingleton();
+        document.getElementById('active-user').innerText = `${user.first_name} ${user.last_name}`; 
 
-        let user = getUser();
-        if(user === null){
-            const { 
-                user: user
-            } = await obtenerUser(); 
-            userSingleton.removeInstance();
-            userInstance = userSingleton.getInstance(user);
-            user = userInstance.getUser();
-        }
+        // UserViewHome Factory
+        // (UserType, HTMLContainer)
+        factoryUserViewTable(user, 'main-container');
         
-        console.log(user);
+        document.getElementById('active-user').addEventListener('click', () => changeClass('nav-logout-show', 'nav-logout'));
     })();
+    
+    
 </script>
 
 </html>

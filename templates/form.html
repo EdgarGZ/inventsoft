@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Sarabun:200,300,400,700,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 </head>
@@ -17,9 +18,13 @@
     <nav class="nav">
         <label>&copy Inventsoft</label>
         <div class="active-user-container">
-            <p>Bienvenido, <button id="active-user">Juan López</button></p>
+            <p>Bienvenido, <button id="active-user">Usuario</button></p>
         </div>
     </nav>
+
+    <div class="nav-logout" id="nav-logout">
+        <a href="{% url 'usuarios:logout' %}">Cerrar Sesión</a>
+    </div>
 
     <section class="options-container">
         <a href="" class="option">
@@ -51,18 +56,26 @@
 </body>
 
 <script src="{% static 'js/design-patterns/factoryUserView.js' %}"></script>
+<script src="{% static 'js/design-patterns/singletonUser.js' %}"></script>
 <script src="{% static 'js/templates/form.js' %}"></script>
 <script src="{% static 'js/functions.js' %}"></script>
+<script src="{% static 'js/styleFunctions.js' %}"></script>
 
 <script>
 
-    (function(){
+    (async function(){
+        // Get user Singleton
+        const user = await getSingleton();
+        console.log(user);
+        document.getElementById('active-user').innerText = `${user.first_name} ${user.last_name}`; 
+
         // UserViewHome Factory
         // (UserType, HTMLContainer)
-        let user = getUser();
-        console.log(user)
-        factoryUserViewForm(user.type, 'main-container');
+        factoryUserViewForm(user, 'main-container');
+        
+        document.getElementById('active-user').addEventListener('click', () => changeClass('nav-logout-show', 'nav-logout'));
     })();
+
 
 </script>
 

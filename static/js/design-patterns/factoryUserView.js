@@ -1,5 +1,6 @@
 function ViewError(){
     this.template = "<h3>Error: User type invalid</h3>";
+    // window.location.href = '/logout/';
 }
 
 function UserViewFactory(objectViewEmployee, objectViewAdmin){

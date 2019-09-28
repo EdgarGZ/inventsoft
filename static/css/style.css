@@ -14,13 +14,14 @@
     left: 0;
     width: 100%;
     background-color: #333333;
-    background: linear-gradient(65deg, rgba(72,67,162,1) 0%, rgba(0,212,255,1) 100%); 
+    /* background: linear-gradient(65deg, rgba(72,67,162,1) 0%, rgba(0,212,255,1) 100%);  */
+    background: linear-gradient(90deg, #f47dbb 0%, #F9B9DB 89%);
     display: flex;
     flex-direction: column;
     justify-items: center;
     justify-content: center;
     padding: 5px 2em;
-    z-index: 9999;
+    z-index: 9997;
 }
 
     .nav label{
@@ -38,20 +39,52 @@
         font-weight: lighter;
         border-radius: 20px;
         float: right;
-        font-weight: 300;
+        font-weight: 600;
     }
 
         #active-user{
             font-weight: bold;
             padding: 3px 15px;
-            color: #3766B8;
             font-size: .9em;
             margin-left: 5px;
             border-radius: 20px;
             background-color: #fff;
             border: none;
-            border: 4px solid #1E97D8;
+            border: 2px solid #FA709A;
+            color: #FA709A;
         }
+
+/* Estilo opción logout en nav */
+.nav-logout{
+    background-color: #333333;
+    position: fixed;
+    z-index: 9998;
+    right: 2.5em;
+    border-radius: 5px;
+    top: 2.3em;
+    padding: .5em;
+    visibility: hidden;
+    transition: .1s all;
+}
+
+.nav-logout-show{
+    top: 2.8em;
+    visibility: visible;
+    transition: .3s all;
+}
+
+    .nav-logout a{
+        margin: 0;
+        color: #fff;
+        font-weight: 600;
+        font-size: .8em;
+    }
+
+.nav-logout:hover{
+    background-color: #FA709A;
+    transition: .3s all;
+}
+
 
 /* Estilo para menú de opciones */
 .options-container{
@@ -70,7 +103,7 @@
     padding: 5px 2em;
     border-bottom: 1px solid rgba(0,0,0,.1);
     box-shadow: 0px 1px 7px 2px rgba(0,0,0,.1);
-    z-index: 9999;
+    z-index: 9997;
 }
     .options-container .option{
         margin: 0;
@@ -79,7 +112,7 @@
         float: left;
     }
         .option i{
-            color: #4285BB;
+            color: #F378B9;
             margin-right: 5px;
         }
 
@@ -107,8 +140,8 @@
 
 .secondary-btn{
     background-color: #fff;
-    border: 2px solid #4285BB;
-    color: #4285BB;;
+    border: 2px solid #FA709A;
+    color: #FA709A;
 }
 
 /* Estilo para contenedor principal */
@@ -126,9 +159,31 @@ button, a, i{
     text-decoration: none;
 }
 
+a:hover{
+    text-decoration: none;
+}
+
+/* Clase para errores de formularios */
+.error p{
+    margin: 0;
+    color: #F94F60;
+    text-align: center;
+}
+
+/* Clase para ocultar elementos */
+.hide{
+    display: none;
+}
+
+/* Clase para mostrar elementos */
+.show{
+    display: block;
+}
+
 /* Media queries para responsividad parantalla para celulares */
 @media (max-width:450px){
     .nav{
         padding: 0 5px;
     }
 }
+

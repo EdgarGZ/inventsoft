@@ -1,9 +1,9 @@
 table thead{
-    background-color: #F8F9FC;
+    background-color: #333333;
 }
-
     thead tr{
-        color: #4E73DF;
+        color: #fff;
+        
     }
 
     tbody tr{
@@ -11,7 +11,7 @@ table thead{
     }
 
     tbody tr .table-actions a{
-        color: #4285BB;
+        color: #F480BD;
         float: left;
         margin-right: 20px;
     }
