@@ -192,16 +192,16 @@ INSERT INTO Category VALUES('GOMITA','Gomitas', 'Caramelos masticables muy dulce
 INSERT INTO Category VALUES('PALETA','Paletas', 'Helado hecho a base de agua, colorante, saborizante y azúcar, de forma alargada y con un palo que lo atraviesa para tomarlo.');
 INSERT INTO Category VALUES('PAPA','Papas', 'Se preparan cortándose en rodajas o en forma de bastones y friéndolas en aceite caliente hasta que queden doradas.');
 
-INSERT INTO provider VALUES('DLAROSA','De la Rosa', 'RO180201694', 'Avenida Siempre Viva #18', 'durose@mail.com', '2101616');
-INSERT INTO provider VALUES('RIKOLINO','Rikolino', 'RIDU180204UF8', 'Calle Hinojosa #5', 'rikolino@mail.com', '2101617');
-INSERT INTO provider VALUES('WONKA','Wonka', 'DUWO180207UV6', 'Avenida Revolucion #30', 'wonka@mail.com', '2101618');
-INSERT INTO provider VALUES('JOLLYRAN','Jolly Rancher', 'JORD1803074910', 'Carretera 57 #255', 'jolly@mail.com', '2101619');
-INSERT INTO provider VALUES('GABI','Gabi', 'GAGA180309I74', 'Carretera San Juan S/N', 'gabiga@mail.com', '2101716');
-INSERT INTO provider VALUES('MARINELA','Marinela', 'MAGA180329FU9', 'Epigmenio Gonzales #13', 'marinela@mail.com', '2101717');
-INSERT INTO provider VALUES('GAMESA','Gamesa', 'GAGA100920QY8', 'Calle Benito Juarez #515', 'gamesa@mail.com', '2101718');
-INSERT INTO provider VALUES('CORONADO','Coronado', 'CODU1004111P6', 'Avenida Allende #8A', 'coronado@mail.com', '2101719');
-INSERT INTO provider VALUES('SABRITAS','Sabritas', 'PASA101011396', 'Carretera Mexico-Qro #853', 'sabritas@mail.com', '2102016');
-INSERT INTO provider VALUES('COYOTES','Coyotes', 'PACO151211GS0', 'Avenida Roldan #95', 'coyotes@mail.com', '2102017');
+INSERT INTO Provider VALUES('DLAROSA','De la Rosa', 'RO180201694', 'Avenida Siempre Viva #18', 'durose@mail.com', '2101616');
+INSERT INTO Provider VALUES('RIKOLINO','Rikolino', 'RIDU180204UF8', 'Calle Hinojosa #5', 'rikolino@mail.com', '2101617');
+INSERT INTO Provider VALUES('WONKA','Wonka', 'DUWO180207UV6', 'Avenida Revolucion #30', 'wonka@mail.com', '2101618');
+INSERT INTO Provider VALUES('JOLLYRAN','Jolly Rancher', 'JORD1803074910', 'Carretera 57 #255', 'jolly@mail.com', '2101619');
+INSERT INTO Provider VALUES('GABI','Gabi', 'GAGA180309I74', 'Carretera San Juan S/N', 'gabiga@mail.com', '2101716');
+INSERT INTO Provider VALUES('MARINELA','Marinela', 'MAGA180329FU9', 'Epigmenio Gonzales #13', 'marinela@mail.com', '2101717');
+INSERT INTO Provider VALUES('GAMESA','Gamesa', 'GAGA100920QY8', 'Calle Benito Juarez #515', 'gamesa@mail.com', '2101718');
+INSERT INTO Provider VALUES('CORONADO','Coronado', 'CODU1004111P6', 'Avenida Allende #8A', 'coronado@mail.com', '2101719');
+INSERT INTO Provider VALUES('SABRITAS','Sabritas', 'PASA101011396', 'Carretera Mexico-Qro #853', 'sabritas@mail.com', '2102016');
+INSERT INTO Provider VALUES('COYOTES','Coyotes', 'PACO151211GS0', 'Avenida Roldan #95', 'coyotes@mail.com', '2102017');
 
 
 -- INSERTS CATEGORÍA BOMBON
@@ -226,7 +226,7 @@ INSERT INTO Product VALUES('PROD0013','APPLE GREEN RING', 'Caja con 8P', 441.26,
 INSERT INTO Product VALUES('PROD0014','CARAMELO SUAVE DISNEY', 'Caja con 30P', 733.02, 'CARAMELO', 'RIKOLINO');
 INSERT INTO Product VALUES('PROD0015','CARAMELO HANNA MONTANA', 'Caja con 30P', 525.33, 'CARAMELO', 'RIKOLINO');
 INSERT INTO Product VALUES('PROD0016','CARAMELO SUAVE TOY', 'Caja con 30P', 733.02, 'CARAMELO', 'RIKOLINO');
-INSERT INTO Product VALUES('PROD0017','REVOLCADITAS MANGO', 'Caja con 24P', 741.29, 'CARAMELO', 'COYOTE');
+INSERT INTO Product VALUES('PROD0017','REVOLCADITAS MANGO', 'Caja con 24P', 741.29, 'CARAMELO', 'COYOTES');
 INSERT INTO Product VALUES('PROD0018','CONFITADO CHICO', 'Caja con 50P', 918.32, 'CARAMELO', 'DLAROSA');
 INSERT INTO Product VALUES('PROD0019','CHILIROKAS FRESA', 'Caja con 24P', 517.52, 'CARAMELO', 'CORONADO');
 INSERT INTO Product VALUES('PROD0020','CHILIROKAS SDA', 'Caja con 24P', 587.52, 'CARAMELO', 'CORONADO');
