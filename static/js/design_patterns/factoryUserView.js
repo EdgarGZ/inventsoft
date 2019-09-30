@@ -13,10 +13,13 @@ function UserViewFactory(ViewSuperAdmin, ViewAreaAdmin, ViewEmployee){
 }
 
 function FormViewFactory(){
-    this.create = (area) =>{
-        if(area === 'AAVEN') return ViewFormSales();
-        if(area === 'AACOM') return ViewFormPurchases();
-        if(area === 'AAALM') return ViewFormStock();
+    this.create = (type) =>{
+        if(type === '/form-sales/') return ViewFormSales();
+        if(type === '/form-purchases/') return ViewFormPurchases();
+        if(type === '/form-stock/') return ViewFormStock();
+        if(type === '/form-products/') return ViewFormProduct();
+        if(type === '/form-staff/') return ViewFormStaff();
+        if(type === '/form-staff-admin/') return ViewFormStaffAdmin();
     }
 }
 

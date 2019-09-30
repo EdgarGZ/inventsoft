@@ -51,7 +51,7 @@ function ViewAdminSalesTable(){
                         <h2>Registros - Ventas</h2>
                     </div>
                     <div class="result-options-container">
-                        <button class="result-option main-option btn">Nuevo registro</button>
+                        <button class="result-option main-option btn" onclick="navigate('/form/form-sales/')">Nuevo registro</button>
                         <button class="result-option other-option btn secondary-btn">Crear reporte</button>
                         <button class="result-option other-option btn secondary-btn">Descargar CSV</button>
                     </div>

@@ -8,7 +8,7 @@ function ViewAdminAreaStaffTable(){
                         <h2>Registros - Personal</h2>
                     </div>
                     <div class="result-options-container">
-                        <button class="result-option main-option btn">Nuevo registro</button>
+                        <button class="result-option main-option btn" onclick="navigate('/form/form-staff/')">Nuevo registro</button>
                         <button class="result-option other-option btn secondary-btn">Crear reporte</button>
                         <button class="result-option other-option btn secondary-btn">Descargar CSV</button>
                     </div>
@@ -59,7 +59,7 @@ function ViewSuperAdminStaffTable(){
                         <h2>Registros - Personal</h2>
                     </div>
                     <div class="result-options-container">
-                        <button class="result-option main-option btn">Nuevo registro</button>
+                        <button class="result-option main-option btn" onclick="navigate('/form/form-staff-admin/')">Nuevo registro</button>
                         <button class="result-option other-option btn secondary-btn">Crear reporte</button>
                         <button class="result-option other-option btn secondary-btn">Descargar CSV</button>
                     </div>

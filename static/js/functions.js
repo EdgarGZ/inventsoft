@@ -1,3 +1,7 @@
+function navigate(url){
+    window.location.assign(url);
+}
+
 // *** async function getUserData();
 // Get user data from server side
 async function getUserData() {
@@ -82,16 +86,20 @@ const getUserType = (user) => {
     } 
 
 // ----------- Form Views ------------------
+    
+//*** function getFormType()
+    //Get Form type: products, stock, sales, purchases, staff, ...
+    const getFormType = () =>{
+        const url = window.location.href;
+        const position = url.search('/form-');
+        const type = url.substr(position, url.length);        
+        return type;
+    }
 
     //*** function factoryFormView()
     //Create Form depending on the user area
-    const factoryFormView = (user) => { 
-        return new FormViewFactory().create(user.area);
+    const factoryFormView = (type) => { 
+        return new FormViewFactory().create(type);
     }
 
-    //*** function factoryFormProductsView()
-    //Create Products Form depending on the user area
-    const factoryFormProductsView = (user) => { 
-        return new FormProductsViewFactory().create(user.area);
-    }
 

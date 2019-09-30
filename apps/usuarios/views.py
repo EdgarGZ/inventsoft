@@ -77,10 +77,10 @@ def table(request):
 
 @login_required
 def form(request, type):
-    """ñ
+    """
         Form function retrieves the form html
     """
-    return render(request, 'form.html', {'type': type})
+    return render(request, 'form.html')
 
 
 @login_required
