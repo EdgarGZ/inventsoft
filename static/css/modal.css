@@ -48,7 +48,7 @@
 
 
 /*--------- Notificación ---------- */
-.notification{
+.notification-modal{
     /* background: linear-gradient(90deg, #f47dbb 0%, #F9B9DB 89%); */
     /* background-color: #F58DC4; */
     background-color: #F378B9;
@@ -65,12 +65,12 @@
     transition: .8s all;
 }
 
-.notification-show{
+.notification-modal-show{
     right: 0;
     transition: .7s all;
 }
 
-.notification p{
+.notification-modal p{
     margin: 0;
     color: #fff;
     font-weight: 600;

@@ -22,7 +22,7 @@
 <script src="{% static 'js/design_patterns/factoryUserView.js' %}"></script>
 <script src="{% static 'js/design_patterns/singletonUser.js' %}"></script>
 <script src="{% static 'js/templates/nav.js' %}"></script>
-<script src="{% static 'js/templates/forms/form_area.js' %}"></script>
+<script src="{% static 'js/templates/forms/form_product.js' %}"></script>
 <script src="{% static 'js/functions.js' %}"></script>
 <script src="{% static 'js/styleFunctions.js' %}"></script>
 
@@ -39,7 +39,7 @@
 
     // ------------------------------------------------
         // Get form specific options for that user type
-        document.body.innerHTML += factoryFormView(user);
+        document.body.innerHTML += ViewFormProduct();
 
     })();
 

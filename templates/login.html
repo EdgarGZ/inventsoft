@@ -42,7 +42,7 @@
         </div>
     </div>
 </body>
-<script src="{% static 'js/design-patterns/singletonUser.js' %}"></script>
+<script src="{% static 'js/design_patterns/singletonUser.js' %}"></script>
 <script src="{% static 'js/styleFunctions.js' %}"></script>
 <script>
     const FORMLOGIN = document.getElementById('formLogin');
@@ -83,10 +83,10 @@
                         </div>
                     </div>
                     `;         
-                    setTimeoutHTML('modal-back-show', 'modal-back', 1300);   
+                    setTimeoutHTML('modal-back-show', 'modal-back', 1000);   
                     setTimeout(function(){
-                        window.location.href = '/table/';
-                    }, 1300)
+                        window.location.href = '/dashboard/';
+                    }, 1000)
                     
                 } else {
                     document.getElementById('error').innerHTML = `<p>Usuario o contraseña inválidos</p>`;

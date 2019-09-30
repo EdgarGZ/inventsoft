@@ -21,21 +21,5 @@ let userSingleton = (function(){
 })();
 
 
-// var userInstance;
-// var user;
-
-// let setSingletonInstance = (userData) => { 
-//     // userInstance = userSingleton.getInstance(userData);
-//     // user = userInstance.getUser();
-//     if(!user){
-//         console.log("Creating user");
-//         user = 5;
-//     }
-//     else{
-//         console.log("User has been created");
-//     }
-//     return user;
-// }
-// let getSingletonInstance = () => { 
-//     return setSingletonInstance('');
-// }
+//userInstance = userSingleton.getInstance(userData);
+//user = userInstance.getUser();

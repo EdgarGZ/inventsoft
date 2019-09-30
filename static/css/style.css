@@ -52,6 +52,7 @@
             border: none;
             border: 2px solid #FA709A;
             color: #FA709A;
+            outline: none;
         }
 
 /* Estilo opción logout en nav */
@@ -59,7 +60,7 @@
     background-color: #333333;
     position: fixed;
     z-index: 9998;
-    right: 2.5em;
+    right: 2.3em;
     border-radius: 5px;
     top: 2.3em;
     padding: .5em;
@@ -143,6 +144,10 @@
     border: 2px solid #FA709A;
     color: #FA709A;
 }
+
+    .secondary-btn:hover{
+        color: #FA709A;
+    }
 
 /* Estilo para contenedor principal */
 .main-container{

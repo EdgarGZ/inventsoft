@@ -6,6 +6,7 @@ async function getUserData() {
     return data.user;
 }
 
+// *** async function getSingleton();
 // Create Singleton Instance
 async function getSingleton(){
     const userData = await getUserData(); 
@@ -15,30 +16,82 @@ async function getSingleton(){
 }
 
 // *** function getUserType()
-// Define the type of user (superuser, admin-area, employee)
+// Define the type of user: superuser, admin-area or employee
 const getUserType = (user) => {
     if(user.is_superuser) return 0;
-    else if(user.is_area_admin) return 1;
-    else return 2;
+    if(user.is_area_admin) return 1;
+    if(user.is_simplemortal) return 2;
+    else return 3;
 }
 
-// *** function factoryUserViewHome()
-// Call UserFactory and add result to HTML element in home.html depending on user type
-const factoryUserViewTable = (user, htmlElement) =>{
-    const container = document.getElementById(htmlElement);
-    const type = getUserType(user);
-    // Views: EmployeeView, AdminAreaView, SuperUserView
-    view = new UserViewFactory(new ViewEmployeeTable(), new ViewAdminTable()).create(type);
-    container.innerHTML = view.template;
-} 
+// ----------- Table Factory Views ------------------
 
-// *** function factoryUserViewForm()
-// Call UserFactory and add result to HTML element in form.html depending on user type
-const factoryUserViewForm = (user, htmlElement) =>{
-    const container = document.getElementById(htmlElement);
-    const type = getUserType(user);
-    // Views: EmployeeView, AdminAreaView, SuperUserView
-    view = new UserViewFactory(new ViewEmployeeForm(), new ViewAdminForm()).create(type);
-    container.innerHTML = view.template;
-} 
+    //*** function factoryTableViewProducts()
+    //Create Products table depending on the user type
+    const factoryTableViewProducts = (user) =>{
+        const type = getUserType(user);
+        view = new UserViewFactory(new ViewAdminProductsTable(),
+                                new ViewAdminProductsTable(),
+                                new ViewEmployeeProductsTable(),
+                                ).create(type);
+        return view.template;
+    } 
+
+    //*** function factoryTableViewPurchases()
+    //Create Purchases table depending on the user type
+    const factoryTableViewPurchases = (user) =>{
+        const type = getUserType(user);
+        view = new UserViewFactory(new ViewAdminPurchasesTable(),
+                                new ViewAdminPurchasesTable(),
+                                new ViewEmployeePurchasesTable(),
+                                ).create(type);
+        return view.template;
+    } 
+
+    //*** function factoryTableViewSales()
+    //Create Sales table depending on the user type
+    const factoryTableViewSales = (user) =>{
+        const type = getUserType(user);
+        view = new UserViewFactory(new ViewAdminSalesTable(),
+                                new ViewAdminSalesTable(),
+                                new ViewEmployeeSalesTable(),
+                                ).create(type);
+        return view.template;
+    } 
+
+    //*** function factoryTableViewStaff()
+    //Create Staff table depending on the user type
+    const factoryTableViewStaff = (user) =>{
+        const type = getUserType(user);
+        view = new UserViewFactory(new ViewSuperAdminStaffTable(),
+                                new ViewAdminAreaStaffTable(),
+                                new ViewAdminAreaStaffTable(),
+                                ).create(type);
+        return view.template;
+    } 
+
+    //*** function factoryTableViewStock()
+    //Create Stock table depending on the user type
+    const factoryTableViewStock = (user) =>{
+        const type = getUserType(user);
+        const view = new UserViewFactory(new ViewAdminStockTable(),
+                                new ViewAdminStockTable(),
+                                new ViewEmployeeStockTable(),
+                                ).create(type);
+        return view.template;
+    } 
+
+// ----------- Form Views ------------------
+
+    //*** function factoryFormView()
+    //Create Form depending on the user area
+    const factoryFormView = (user) => { 
+        return new FormViewFactory().create(user.area);
+    }
+
+    //*** function factoryFormProductsView()
+    //Create Products Form depending on the user area
+    const factoryFormProductsView = (user) => { 
+        return new FormProductsViewFactory().create(user.area);
+    }
 

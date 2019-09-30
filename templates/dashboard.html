@@ -14,99 +14,35 @@
     <link href="https://fonts.googleapis.com/css?family=Sarabun:200,300,400,700,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 </head>
+
 <body>
-    <nav class="nav">
-        <label>&copy Inventsoft</label>
-        <div class="active-user-container">
-            <p>Bienvenido, <button id="active-user">Juan López</button></p>
-        </div>
-    </nav>
-
-    <div class="nav-logout" id="nav-logout">
-        <a href="{% url 'usuarios:logout' %}">Cerrar Sesión</a>
-    </div>
-
-    <section class="options-container">
-        <a href="" class="option">
-            <i class="fas fa-laptop"></i>
-            <span>Categoría</span>
-        </a>
-
-        <a href="" class="option">
-            <i class="fas fa-laptop"></i>
-            <span>Categoría</span>
-        </a>
-
-        <a href="" class="option">
-            <i class="fas fa-laptop"></i>
-            <span>Categoría</span>
-        </a>
-
-        <a href="" class="option">
-            <i class="fas fa-laptop"></i>
-            <span>Categoría</span>
-        </a>
-
-            
-    </section>
-
-    <div class="container-fluid main-container">
-        <div class="row main-row-container">
-            <div class="col-10 result-container">
-                <div class="result-title">
-                    <i class="fas fa-laptop"></i>
-                    <h2>Dashboard</h2>
-                </div>
-                <div class="result-options-container">
-                    <!-- <button class="result-option btn">Nuevo registro</button> -->
-                </div>
-                <div class="row dashboard-container">
-                    <div class="col-lg-3 col-12 col-sm-4 dashboard-option">
-                        <a href="">Opción 1</a>
-                    </div>
-
-                    <div class="col-lg-3 col-12 col-sm-4 dashboard-option">
-                        <a href="">Opción 1</a>
-                    </div>
-
-                    <div class="col-lg-3 col-12 col-sm-4 dashboard-option">
-                        <a href="">Opción 1</a>
-                    </div>
-
-                    <div class="col-lg-3 col-12 col-sm-4 dashboard-option">
-                        <a href="">Opción 1</a>
-                    </div>
-
-                    <div class="col-lg-3 col-12 col-sm-4 dashboard-option">
-                        <a href="">Opción 1</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    
 </body>
 
-<script src="{% static 'js/design-patterns/factoryUserView.js' %}"></script>
-<script src="{% static 'js/design-patterns/singletonUser.js' %}"></script>
-<!-- <script src="{% static 'js/templates/dashboard.js' %}"></script> -->
+<script src="{% static 'js/design_patterns/factoryUserView.js' %}"></script>
+<script src="{% static 'js/design_patterns/singletonUser.js' %}"></script>
+<script src="{% static 'js/templates/nav.js' %}"></script>
+<script src="{% static 'js/templates/dashboard.js' %}"></script>
 <script src="{% static 'js/functions.js' %}"></script>
 <script src="{% static 'js/styleFunctions.js' %}"></script>
+
 <script>
-
     (async function(){
-        // Get user Singleton
-        const user = await getSingleton();
-        document.getElementById('active-user').innerText = `${user.first_name} ${user.last_name}`; 
 
-        // UserViewHome Factory
-        // (UserType, HTMLContainer)
-        // factoryUserViewForm(user.type, 'main-container');
+    // ------------------------------------------------
+        // get user
+        const user = await getSingleton();
         
-        document.getElementById('active-user').addEventListener('click', () => changeClass('nav-logout-show', 'nav-logout'));
+    // ------------------------------------------------
+        // Get nav specific options for that user type
+        document.body.innerHTML += ViewNav(user);
+
+    // ------------------------------------------------
+        // Get dashboard specific options for that user type
+        document.body.innerHTML += ViewDashboard(user);
+
     })();
-    
-    
+
 </script>
 
 </html>

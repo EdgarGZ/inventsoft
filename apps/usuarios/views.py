@@ -76,11 +76,12 @@ def table(request):
     return render(request, 'table.html')
 
 @login_required
-def form(request):
-    """
+def form(request, type):
+    """ñ
         Form function retrieves the form html
     """
-    return render(request, 'form.html')
+    return render(request, 'form.html', {'type': type})
+
 
 @login_required
 def fetch_user(request):
@@ -99,6 +100,63 @@ def logout(request):
     response = redirect('usuarios:render_login')
     response.delete_cookie('user')
     return response
+
+@login_required
+def stock(request):
+    """
+        Stock function retrieves the stock html
+    """
+    return render(request, 'stock.html')
+
+
+@login_required
+def sales(request):
+    """
+        Sales function retrieves the sales html
+    """
+    return render(request, 'sales.html')
+
+
+@login_required
+def purchases(request):
+    """
+        Purchases function retrieves the purchases html
+    """
+    return render(request, 'purchases.html')
+
+
+@login_required
+def products(request):
+    """
+        Products function retrieves the products html
+    """
+    return render(request, 'products.html')
+
+
+@login_required
+def staff(request):
+    """
+        Staff function retrieves the staff html
+    """
+    return render(request, 'staff.html')
+
+
+@login_required
+def records(request):
+    """
+        Records function retrieves the records html
+    """
+    return render(request, 'records.html')
+
+
+@login_required
+def notifications(request):
+    """
+        Notifications function retrieves the notifications html
+    """
+    return render(request, 'notifications.html')
+
+
 
     # if request.method == 'POST':
     #     username = request.POST['username']
