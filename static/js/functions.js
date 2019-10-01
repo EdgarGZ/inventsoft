@@ -33,18 +33,17 @@ const getUserType = (user) => {
     //*** function factoryTableViewProducts()
     //Create Products table depending on the user type
     const factoryTableViewProducts = (user) =>{
-        const type = getUserType(user);
+        // const type = getUserType(user);
         let view;
-        if(user.type === 2 && user.area !== 'AA'){
-            view = new ViewEmployeeProductsTable();
+        if(user.area === 'AA'){
+            view = new ViewStockProductsTable();
         }
-        else{
+        else if(user.area === 'AAALM' || user.area === 'SADMI'){
             view = new ViewAdminProductsTable();
         }
-        // view = new UserViewFactory(new ViewAdminProductsTable(),
-            //                             new ViewAdminProductsTable(),
-            //                             new ViewEmployeeProductsTable(),
-            //                             ).create(type);
+        else{
+            view = new ViewEmployeeProductsTable();
+        }
         return view.template;
     } 
 
