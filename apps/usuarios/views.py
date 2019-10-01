@@ -1,6 +1,7 @@
 # Django
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 # Decorators
@@ -55,11 +56,26 @@ def login_user(request):
                 response.set_cookie('user', user)
                 return response
             else:
-                response.set_cookie('user', user)
                 return response
         else:
-            response.set_cookie('user', user)
             return response
+
+
+@login_required
+def fetch_user(request):
+    """
+    fetch_user function to retrieve te current logged in user
+    """
+    cookie_user = request.COOKIES.get('user')
+    list_user = cookie_user.split('\' :')
+    user = str(list_user).split(':')
+    uid = user[1].split(',')
+    resp = get_user(user_id=uid[0])
+    data = {
+        'user': resp
+    }
+    return JsonResponse(data)
+
 
 @login_required
 def dashboard(request):
@@ -67,6 +83,52 @@ def dashboard(request):
         Dashboard function retrieves the dashboard html
     """
     return render(request, 'dashboard.html')
+
+
+@login_required
+def products(request):
+    """
+        Products function retrieves the products html
+    """
+    return render(request, 'products.html')
+
+
+def fetch_products(request):
+    """
+        fetch_products function retrieves all products in the D.B.
+        and sends them to the front in JSON format
+    """
+    products = []
+    data = {}
+
+    try:
+        tcp = threaded_postgreSQL_pool
+        connection = tcp.getconn()
+        cursor = connection.cursor()
+        query = f'SELECT * FROM Product'
+        cursor.execute(query)
+        product_list = cursor.fetchall()
+        column_names = [desc[0] for desc in cursor.description]
+        for row in product_list:
+            products.append(
+                {
+                    'id': row[0],
+                    'name': row[1],
+                    'description': row[2],
+                    'price': row[3],
+                    'category': row[4],
+                    'provider': row[5],
+                }
+            )
+        data['products'] = products
+        return JsonResponse(data)
+    except Exception as e:
+        data['products'] = 'error'
+        return JsonResponse(data)
+    finally:
+        if (tcp):
+            tcp.putconn(connection)
+            print("Threaded PostgreSQL connection pool is closed")
 
 @login_required
 def table(request):
@@ -82,18 +144,6 @@ def form(request, type):
     """
     return render(request, 'form.html')
 
-
-@login_required
-def fetch_user(request):
-    cookie_user = request.COOKIES.get('user')
-    list_user = cookie_user.split('\' :')
-    user = str(list_user).split(':')
-    uid = user[1].split(',')
-    resp = get_user(user_id=uid[0])
-    data = {
-        'user': resp
-    }
-    return JsonResponse(data)
 
 @login_required
 def logout(request):
@@ -123,14 +173,6 @@ def purchases(request):
         Purchases function retrieves the purchases html
     """
     return render(request, 'purchases.html')
-
-
-@login_required
-def products(request):
-    """
-        Products function retrieves the products html
-    """
-    return render(request, 'products.html')
 
 
 @login_required

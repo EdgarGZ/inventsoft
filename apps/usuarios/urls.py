@@ -13,6 +13,7 @@ from apps.usuarios.views import stock
 from apps.usuarios.views import sales
 from apps.usuarios.views import purchases
 from apps.usuarios.views import products
+from apps.usuarios.views import fetch_products
 from apps.usuarios.views import staff
 from apps.usuarios.views import records
 from apps.usuarios.views import notifications
@@ -34,7 +35,10 @@ urlpatterns = [
     path('stock/', stock, name='stock'),
     path('sales/', sales, name='sales'),
     path('purchases/', purchases, name='purchases'),
+    
+    # Products
     path('products/', products, name='products'),
+    path('fetch_products/', fetch_products, name='get_products'),
     path('staff/', staff, name='staff'),
     path('records/', records, name='records'),
     path('notifications/', notifications, name='notifications'),

@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    
+
 </body>
 
 <script src="{% static 'js/design_patterns/factoryUserView.js' %}"></script>
@@ -40,6 +40,14 @@
     // ------------------------------------------------
         // Get table specific options for that user type
         document.body.innerHTML += factoryTableViewProducts(user);
+
+        async function getProductsData() {
+            const response = await fetch('/fetch_products/');
+            const data = await response.json();
+            return data.products;
+        }
+
+        const data = await getProductsData()
 
     })();
 

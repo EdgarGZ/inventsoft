@@ -27,19 +27,22 @@ def authenticate(username=None, password=None):
         user_val = [value for value in resp]
         user = {column:user_val[i] for i, column in enumerate(column_names)}
         if check_password(password, user['password']):
-            if user['is_superuser'] == True and user['is_area_admin'] == False:
+            if user['is_superuser'] == True and user['is_areaadmin'] == False:
+                print('entro')
                 user['type'] = 0
-            elif user['is_superuser'] == False and user['is_area_admin'] == True:
+            elif user['is_superuser'] == False and user['is_areaadmin'] == True:
                 user['type'] = 1
-            elif user['is_superuser'] == False and user['is_area_admin'] == False:
+            elif user['is_superuser'] == False and user['is_areaadmin'] == False:
                 user['type'] = 2
             else:
                 user['type'] = 3
 
             return user      
+            
         return None 
     except Exception as e:
         return None  
+        print(e)
     finally:
         if (tcp):
             tcp.putconn(connection)

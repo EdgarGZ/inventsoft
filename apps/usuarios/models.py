@@ -93,6 +93,7 @@ CREATE SEQUENCE seq_autoid_prod
   MAXVALUE 9999
   START 1;
 
+-- STORED PROCEDURE
 CREATE OR REPLACE FUNCTION generate_product_id() RETURNS varchar AS 
 $$
   DECLARE
@@ -297,13 +298,33 @@ INSERT INTO Product VALUES(generate_product_id(),'JOLLY RANCHER FILLED GUMMIES',
 INSERT INTO Product VALUES(generate_product_id(),'BARRITAS FRESA', 'Caja con 12P ', 290.14, 'GALLETA', 'MARINELA');
 INSERT INTO Product VALUES(generate_product_id(),'BARRITAS PIÑA', 'Caja con 12P ', 311.63, 'GALLETA', 'MARINELA');
 INSERT INTO Product VALUES(generate_product_id(),'PRINCIPE', 'Caja con 9P ', 251.95, 'GALLETA', 'MARINELA');
-INSERT INTO Product VALUES(generate_product_id(),'TRIKI TRAKES', 'Caja con 10P ', 291.45, 'GALLETA', 'MARINELA');
-INSERT INTO Product VALUES(generate_product_id(),'PLATIVOLOS', 'Caja con 12P ', 274.14, 'GALLETA', 'MARINELA');
-INSERT INTO Product VALUES(generate_product_id(),'POLVORONES', 'Caja con 12P ', 273.48, 'GALLETA', 'MARINELA');
-INSERT INTO Product VALUES(generate_product_id(),'MAMUT', 'Caja con 8P ', 253.77, 'GALLETA', 'GAMESA');
-INSERT INTO Product VALUES(generate_product_id(),'CHOKIS', 'Caja con 10P ', 102.57, 'GALLETA', 'GAMESA');
-INSERT INTO Product VALUES(generate_product_id(),'CREMAX FRESA', 'Caja con 8P ', 122.03, 'GALLETA', 'GAMESA');
-INSERT INTO Product VALUES(generate_product_id(),'EMPERADOR LIMON 212G', 'Caja con 10P ', 99.72, 'GALLETA', 'GAMESA');
+-------------------------------------------
+-- STORED PROCEDURE
+CREATE OR REPLACE FUNCTION addProduct(name VARCHAR(75), description VARCHAR(75), price DECIMAL(10,2), category CategoryKey, provider ProviderKey, amount_prod numeric(10)) RETURNS BOOLEAN AS 
+$$    
+  DECLARE
+    id_product ProductKey;
+	id_stock decimal(10);
+  BEGIN
+    SELECT generate_product_id() INTO id_product;
+    INSERT INTO Product VALUES(id_product, name, description, price, category, provider);
+    IF found THEN
+		SELECT MAX(id) + 1 FROM Stock INTO id_stock;
+        INSERT INTO Stock(id, product, amount) VALUES(id_stock, id_product, amount_prod);
+        RETURN found;  
+    ELSE
+        RETURN found;
+    END IF;
+  END;
+$$ LANGUAGE 'plpgsql';
+
+SELECT addProduct('TRIKI TRAKES', 'Caja con 10P ', 291.45, 'GALLETA', 'MARINELA', 20);
+SELECT addProduct('PLATIVOLOS', 'Caja con 12P ', 274.14, 'GALLETA', 'MARINELA', 20);
+SELECT addProduct('POLVORONES', 'Caja con 12P ', 273.48, 'GALLETA', 'MARINELA', 20);
+SELECT addProduct('MAMUT', 'Caja con 8P ', 253.77, 'GALLETA', 'GAMESA', 20);
+SELECT addProduct('CHOKIS', 'Caja con 10P ', 102.57, 'GALLETA', 'GAMESA', 20);
+SELECT addProduct('CREMAX FRESA', 'Caja con 8P ', 122.03, 'GALLETA', 'GAMESA', 20);
+SELECT addProduct('EMPERADOR LIMON 212G', 'Caja con 10P ', 99.72, 'GALLETA', 'GAMESA', 20);
 
 -- INSERTS STOCK
 INSERT INTO Stock VALUES(1, 'PROD0001', 20);
@@ -317,7 +338,7 @@ INSERT INTO Stock VALUES(8, 'PROD0008', 20);
 INSERT INTO Stock VALUES(9, 'PROD0009', 20);
 INSERT INTO Stock VALUES(10, 'PROD0010', 20);
 INSERT INTO Stock VALUES(11, 'PROD0011', 20);
-INSERT INTO Stock VALUES(12,'PROD0012', 20);
+INSERT INTO Stock VALUES(12, 'PROD0012', 20);
 INSERT INTO Stock VALUES(13, 'PROD0013', 20);
 INSERT INTO Stock VALUES(14, 'PROD0014', 20);
 INSERT INTO Stock VALUES(15, 'PROD0015', 20);
@@ -331,7 +352,7 @@ INSERT INTO Stock VALUES(22, 'PROD0022', 20);
 INSERT INTO Stock VALUES(23, 'PROD0023', 20);
 INSERT INTO Stock VALUES(24, 'PROD0024', 20);
 INSERT INTO Stock VALUES(25, 'PROD0025', 20);
-INSERT INTO Stock VALUES(26,'PROD0026', 20);
+INSERT INTO Stock VALUES(26, 'PROD0026', 20);
 INSERT INTO Stock VALUES(27, 'PROD0027', 20);
 INSERT INTO Stock VALUES(28, 'PROD0028', 20);
 INSERT INTO Stock VALUES(29, 'PROD0029', 20);
@@ -364,13 +385,5 @@ INSERT INTO Stock VALUES(55, 'PROD0055', 20);
 INSERT INTO Stock VALUES(56, 'PROD0056', 20);
 INSERT INTO Stock VALUES(57, 'PROD0057', 20);
 INSERT INTO Stock VALUES(58, 'PROD0058', 20);
-INSERT INTO Stock VALUES(59, 'PROD0059', 20);
-INSERT INTO Stock VALUES(60, 'PROD0060', 20);
-INSERT INTO Stock VALUES(61, 'PROD0061', 20);
-INSERT INTO Stock VALUES(62, 'PROD0062', 20);
-INSERT INTO Stock VALUES(63, 'PROD0063', 20);
-INSERT INTO Stock VALUES(64, 'PROD0064', 20);
-
--- STORED PROCEDURE
 
 """
