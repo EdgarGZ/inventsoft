@@ -23,7 +23,7 @@ async function getSingleton(){
 // Define the type of user: superuser, admin-area or employee
 const getUserType = (user) => {
     if(user.is_superuser) return 0;
-    if(user.is_area_admin) return 1;
+    if(user.is_adminarea) return 1;
     if(user.is_simplemortal) return 2;
     else return 3;
 }
@@ -34,10 +34,17 @@ const getUserType = (user) => {
     //Create Products table depending on the user type
     const factoryTableViewProducts = (user) =>{
         const type = getUserType(user);
-        view = new UserViewFactory(new ViewAdminProductsTable(),
-                                new ViewAdminProductsTable(),
-                                new ViewEmployeeProductsTable(),
-                                ).create(type);
+        let view;
+        if(user.type === 2 && user.area !== 'AA'){
+            view = new ViewEmployeeProductsTable();
+        }
+        else{
+            view = new ViewAdminProductsTable();
+        }
+        // view = new UserViewFactory(new ViewAdminProductsTable(),
+            //                             new ViewAdminProductsTable(),
+            //                             new ViewEmployeeProductsTable(),
+            //                             ).create(type);
         return view.template;
     } 
 
