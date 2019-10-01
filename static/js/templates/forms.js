@@ -110,7 +110,6 @@ function ViewFormProduct(){
                         <div class="col-10 col-sm-8 col-lg-5 col-xl-4 col-form-container">
                             <div class="form-container">
                                 <form action="" class="form">
-                                    <input type="text" placeholder="Identificador:">
                                     <input type="text" placeholder="Nombre:">
                                     <textarea name="" id="" placeholder="Descripción..."></textarea>
                                     <input type="text" placeholder="Precio:">
