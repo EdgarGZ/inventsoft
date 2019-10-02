@@ -1,4 +1,4 @@
-function ViewEmployeeProductsTable(){
+function ViewEmployeeProductsTable(data){
     this.template = `
         <div class="container-fluid main-container" id="main-container">
             <div class="row main-row-container">
@@ -21,16 +21,9 @@ function ViewEmployeeProductsTable(){
                                 <th scope="col">Categoría</th>
                                 <th scope="col">Proveedor</th>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">PROD001</th>
-                                    <td>Producto 1</td>
-                                    <td>Caja con 10P</td>
-                                    <td>500.00</td>
-                                    <td>PAPA</td>
-                                    <td>SABRITAS</td>
-                                </tr>
-                            </tbody>
+                            <tbody>`;
+                            this.template += getProductsEmployeeData(data);
+                            this.template += `</tbody>
                         </table>
                     </div>
                 </div>
@@ -39,7 +32,7 @@ function ViewEmployeeProductsTable(){
     `;
 }
 
-function ViewAdminProductsTable(){
+function ViewAdminProductsTable(data){
     this.template = `
         <div class="container-fluid main-container" id="main-container">
             <div class="row main-row-container">
@@ -64,26 +57,9 @@ function ViewAdminProductsTable(){
                                 <th scope="col">Categoría</th>
                                 <th scope="col">Proveedor</th>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">PROD001</th>
-                                    <td class="table-actions">
-                                        <a href="/form/form-products/" class="edit-row">
-                                            <i class="fas fa-pen"></i>
-                                            <span>Editar</span>
-                                        </a>
-                                        <a href="">
-                                            <i class="fas fa-trash"></i>
-                                            <span>Borrar</span>
-                                        </a>
-                                    </td>
-                                    <td>Producto 1</td>
-                                    <td>Caja con 10P</td>
-                                    <td>500.00</td>
-                                    <td>PAPA</td>
-                                    <td>SABRITAS</td>
-                                </tr>
-                            </tbody>
+                            <tbody>`;
+                                this.template += getProductsAdminData(data);
+                                this.template += `</tbody
                         </table>
                     </div>
                 </div>
@@ -93,7 +69,7 @@ function ViewAdminProductsTable(){
 }
 
 
-function ViewStockProductsTable(){
+function ViewStockProductsTable(data){
     this.template = `
         <div class="container-fluid main-container" id="main-container">
             <div class="row main-row-container">
@@ -117,16 +93,9 @@ function ViewStockProductsTable(){
                                 <th scope="col">Categoría</th>
                                 <th scope="col">Proveedor</th>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">PROD001</th>
-                                    <td>Producto 1</td>
-                                    <td>Caja con 10P</td>
-                                    <td>500.00</td>
-                                    <td>PAPA</td>
-                                    <td>SABRITAS</td>
-                                </tr>
-                            </tbody>
+                            <tbody>`;
+                                this.template += getProductsEmployeeData(data);
+                                this.template += `</tbody>
                         </table>
                     </div>
                 </div>
