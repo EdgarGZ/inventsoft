@@ -47,7 +47,19 @@
             return data.products;
         }
 
-        const data = await getProductsData()
+        const data = await getProductsData();
+        
+        for(product of data){
+            document.getElementsByTagName('tbody')[0].innerHTML += `
+            <tr>
+                <th scope="row">${product.product_key}</th>
+                <td>${product.name}</td>
+                <td>${product.description}</td>
+                <td>${product.price}</td>
+                <td>${product.category}</td>
+                <td>${product.provider}</td>
+            </tr>
+        `}
         console.log(data)
 
     })();

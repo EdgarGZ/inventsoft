@@ -73,20 +73,21 @@
             try {
                 const data = await mandarData(URL, form);
                 if(data.status === 200){
-                    document.body.innerHTML += `
-                    <div class="modal-back" id="modal-back">
-                        <div class="modal-container">
-                            <div class="modal-div">
-                                <h3>Ingreso exitoso</h3>
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                        </div>
-                    </div>
-                    `;         
-                    setTimeoutHTML('modal-back-show', 'modal-back', 1000);   
-                    setTimeout(function(){
-                        window.location.href = '/dashboard/';
-                    }, 1000)
+                    showModal('Ingreso exitoso', '/dashboard/');
+                    // document.body.innerHTML += `
+                    // <div class="modal-back" id="modal-back">
+                    //     <div class="modal-container">
+                    //         <div class="modal-div">
+                    //             <h3>Ingreso exitoso</h3>
+                    //             <i class="fas fa-check-circle"></i>
+                    //         </div>
+                    //     </div>
+                    // </div>
+                    // `;         
+                    // setTimeoutHTML('modal-back-show', 'modal-back', 1000);   
+                    // setTimeout(function(){
+                    //     window.location.href = '/dashboard/';
+                    // }, 1000)
                     
                 } else {
                     document.getElementById('error').innerHTML = `<p>Usuario o contraseña inválidos</p>`;

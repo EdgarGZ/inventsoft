@@ -115,9 +115,9 @@
                     const data = await mandarData('http://127.0.0.1:8000/post_product/', form);
                     console.log(data)
                     if (data.status === 200) {
-                        alert('Si se pudo');
+                        showModal('Producto registrado correctamente', '/products/');
                     } else {
-                        alert('No se pudo');
+                        showModal('Ingreso exitoso', );
                     }
                 } catch (error) {
                     

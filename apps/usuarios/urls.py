@@ -1,8 +1,7 @@
 # Django
 from django.urls import path
 
-
-# Viewa
+# Views
 from apps.usuarios.views import login_user
 from apps.usuarios.views import render_login
 from apps.usuarios.views import table
@@ -20,9 +19,6 @@ from apps.usuarios.views import notifications
 from apps.usuarios.views import form
 from apps.usuarios.views import fetch_categories_and_providers
 from apps.usuarios.views import post_product
-# from apps.usuarios.views import form_area
-# from apps.usuarios.views import form_producot
-# from apps.usuarios.views import form_staff
 
 # URLPatterns
 app_name='usuarios'
@@ -46,7 +42,4 @@ urlpatterns = [
     path('notifications/', notifications, name='notifications'),
     path('categories_and_providers/', fetch_categories_and_providers, name='fetch_categories_and_providers'),
     path('post_product/', post_product, name='post_product'),
-    # path('form_area/', form_area, name='form_area'),
-    # path('form_product/', form_product, name='form_product'),
-    # path('form_area/', form_area, name='form_area'),
 ]
