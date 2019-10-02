@@ -18,6 +18,8 @@ from apps.usuarios.views import staff
 from apps.usuarios.views import records
 from apps.usuarios.views import notifications
 from apps.usuarios.views import form
+from apps.usuarios.views import fetch_categories_and_providers
+from apps.usuarios.views import post_product
 # from apps.usuarios.views import form_area
 # from apps.usuarios.views import form_producot
 # from apps.usuarios.views import form_staff
@@ -42,6 +44,8 @@ urlpatterns = [
     path('staff/', staff, name='staff'),
     path('records/', records, name='records'),
     path('notifications/', notifications, name='notifications'),
+    path('categories_and_providers/', fetch_categories_and_providers, name='fetch_categories_and_providers'),
+    path('post_product/', post_product, name='post_product'),
     # path('form_area/', form_area, name='form_area'),
     # path('form_product/', form_product, name='form_product'),
     # path('form_area/', form_area, name='form_area'),

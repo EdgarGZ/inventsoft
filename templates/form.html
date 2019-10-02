@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    
+    {% csrf_token %}
 </body>
 
 <script src="{% static 'js/design_patterns/factoryUserView.js' %}"></script>
@@ -25,6 +25,7 @@
 <script src="{% static 'js/templates/forms.js' %}"></script>
 <script src="{% static 'js/functions.js' %}"></script>
 <script src="{% static 'js/styleFunctions.js' %}"></script>
+<script src="{% static 'js/cleave.js' %}"></script>
 
 <script>
     (async function(){
@@ -41,6 +42,94 @@
         // Get form specific options for that form type
         document.body.innerHTML += factoryFormView(getFormType());
 
+        if(getFormType() === '/form-products/'){
+            async function getCatAndProvData() {
+            const response = await fetch('/categories_and_providers/');
+            const data = await response.json();
+            return data;
+        }
+
+        const data = await getCatAndProvData()
+
+        function setAttributes(element, attributes){
+            for(const attribute in attributes){
+                element.setAttribute(attribute, attributes[attribute])
+            }
+        }
+
+        function addOptions(selectName, data){
+            selectElement = document.getElementById(selectName);
+
+            for(let i = 0; i < data.length; i++){
+                const optionElement = document.createElement('option');
+                setAttributes(optionElement, {
+                    value: data[i].key,
+                }) 
+                optionElement.innerHTML = data[i].name;
+                selectElement.appendChild(optionElement);
+            }
+        }
+
+        addOptions('categoria', data.categories);
+        addOptions('proveedor', data.providers);
+
+        const precio = new Cleave('#precio', {
+            blocks: [10],
+            uppercase: true
+        });
+
+        const cantidad = new Cleave('#cantidad', {
+            blocks: [10],
+            uppercase: true
+        });
+
+        const FORMPRODUCTO = document.querySelector('#formProducto');
+        const CSRF_TOKEN = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+        async function mandarData(url, data){
+            const response = await fetch(url, {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'X-CSRFToken': CSRF_TOKEN
+                }
+            })
+            const resp = await response.json();
+            return resp;
+        }
+        
+        FORMPRODUCTO.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if(document.getElementById('nombre').value !== '' && document.getElementById('descripcion').value !== '' && document.getElementById('precio').value !== '' && document.getElementById('categoria').value !== '' && document.getElementById('proveedor').value !== '' && document.getElementById('cantidad').value !== ''){
+                console.log('si')
+                const form = new FormData();
+                form.append('nombre', document.getElementById('nombre').value);
+                form.append('descripcion', document.getElementById('descripcion').value);
+                form.append('precio', document.getElementById('precio').value);
+                form.append('categoria', document.getElementById('categoria').value);
+                form.append('proveedor', document.getElementById('proveedor').value);
+                form.append('cantidad', document.getElementById('cantidad').value);
+
+                try {
+                    const data = await mandarData('http://127.0.0.1:8000/post_product/', form);
+                    console.log(data)
+                    if (data.status === 200) {
+                        alert('Si se pudo');
+                    } else {
+                        alert('No se pudo');
+                    }
+                } catch (error) {
+                    
+                }
+
+            } else {
+                alert('Llenar todos los campos')
+            }
+        })
+        } else if(getFormType() === '/form-sales/') {
+            alert('SALES')
+        }
     })();
 
 </script>

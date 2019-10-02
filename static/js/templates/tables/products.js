@@ -68,7 +68,7 @@ function ViewAdminProductsTable(){
                                 <tr>
                                     <th scope="row">PROD001</th>
                                     <td class="table-actions">
-                                        <a href="" class="edit-row">
+                                        <a href="/form/form-products/" class="edit-row">
                                             <i class="fas fa-pen"></i>
                                             <span>Editar</span>
                                         </a>

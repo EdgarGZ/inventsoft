@@ -26,7 +26,7 @@ function ViewAdminAreaStaffTable(){
                                 <tr>
                                     <th scope="row">AA001</th>
                                     <td class="table-actions">
-                                        <a href="" class="edit-row">
+                                        <a href="/form/form-staff/" class="edit-row">
                                             <i class="fas fa-pen"></i>
                                             <span>Editar</span>
                                         </a>
@@ -81,7 +81,7 @@ function ViewSuperAdminStaffTable(){
                                 <tr>
                                     <th scope="row">AA001</th>
                                     <td class="table-actions">
-                                        <a href="" class="edit-row">
+                                        <a href="/form/form-staff-admin/" class="edit-row">
                                             <i class="fas fa-pen"></i>
                                             <span>Editar</span>
                                         </a>

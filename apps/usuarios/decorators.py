@@ -16,7 +16,7 @@ def login_required(func):
             *args -> unnamed arguments passed in de function, avoid us to know
                      every param for differet functions.
         """
-        if args[0].COOKIES.get('user'):
+        if 'user' in args[0].session:
             return func(*args, **kwargs)
         else:
             return redirect('usuarios:render_login')

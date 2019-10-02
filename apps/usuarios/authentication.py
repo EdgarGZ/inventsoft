@@ -20,7 +20,7 @@ def authenticate(username=None, password=None):
         tcp = threaded_postgreSQL_pool
         connection = tcp.getconn()
         cursor = connection.cursor()
-        query = f'SELECT * FROM employee WHERE email = \'{username}\''
+        query = f'SELECT emp_key, email, password, first_name, last_name, area, is_superuser, is_areaadmin, is_simplemortal FROM employee WHERE email = \'{username}\''
         cursor.execute(query)
         resp = cursor.fetchone()
         column_names = [desc[0] for desc in cursor.description]
@@ -31,7 +31,6 @@ def authenticate(username=None, password=None):
         return None 
     except Exception as e:
         return None  
-        print(e)
     finally:
         if (tcp):
             tcp.putconn(connection)
@@ -42,7 +41,7 @@ def get_user(user_id=None):
         tcp = threaded_postgreSQL_pool
         connection = tcp.getconn()
         cursor = connection.cursor()
-        query = f'SELECT * FROM employee WHERE emp_key = {user_id}'
+        query = f'SELECT emp_key, email, password, first_name, last_name, area, is_superuser, is_areaadmin, is_simplemortal FROM employee WHERE emp_key = {user_id}'
         cursor.execute(query)
         resp = cursor.fetchone()
         column_names = [desc[0] for desc in cursor.description]

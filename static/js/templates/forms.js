@@ -109,16 +109,15 @@ function ViewFormProduct(){
                     <div class="row row-form-container">
                         <div class="col-10 col-sm-8 col-lg-5 col-xl-4 col-form-container">
                             <div class="form-container">
-                                <form action="" class="form">
-                                    <input type="text" placeholder="Nombre:">
-                                    <textarea name="" id="" placeholder="Descripción..."></textarea>
-                                    <input type="text" placeholder="Precio:">
-                                    <select name="" id="" placeholder="Categoría">
-                                        <option value="">-- Categoría --</option>
+                                <form id="formProducto" action="." method="POST" class="form">
+                                    <input type="text"id="nombre" placeholder="Nombre:">
+                                    <textarea id="descripcion" placeholder="Descripción..."></textarea>
+                                    <input type="text" id="precio" placeholder="Precio:">
+                                    <select id="categoria" placeholder="Categoría">
                                     </select>
-                                    <select name="" id="" placeholder="Proveedor">
-                                        <option value="">-- Proveedor --</option>
+                                    <select id="proveedor" placeholder="Proveedor">
                                     </select>
+                                    <input id="cantidad" type="text" placeholder="Cantidad:">
                                     <button type="submit" class="btn btn-submit">Guardar</button>
                                     <a href="" class="btn secondary-btn">Cancelar</a>
                                 </form>

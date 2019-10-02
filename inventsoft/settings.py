@@ -52,6 +52,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'inventsoft.urls'
 
+SESSION_ENGINE = "django.contrib.sessions.backends.file"
+SESSION_FILE_PATH = None
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

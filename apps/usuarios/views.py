@@ -1,7 +1,6 @@
 # Django
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 # Decorators
@@ -19,6 +18,9 @@ from inventsoft.connections_pool import threaded_postgreSQL_pool
 
 # Auth
 from apps.usuarios.authentication import authenticate, get_user
+
+# Query
+from apps.usuarios.querys import execute_query, call_stored_procedure
 
 
 # Views
@@ -52,9 +54,8 @@ def login_user(request):
                     'response': user, 
                     'status': 200
                 }
-                response = JsonResponse(data)
-                response.set_cookie('user', user)
-                return response
+                request.session['user'] = user
+                return JsonResponse(data)
             else:
                 return response
         else:
@@ -66,11 +67,9 @@ def fetch_user(request):
     """
     fetch_user function to retrieve te current logged in user
     """
-    cookie_user = request.COOKIES.get('user')
-    list_user = cookie_user.split('\' :')
-    user = str(list_user).split(':')
-    uid = user[1].split(',')
-    resp = get_user(user_id=uid[0])
+    user = request.session['user']
+    resp = get_user(user_id=f'\'{user["emp_key"]}\'')
+    print(resp)
     data = {
         'user': resp
     }
@@ -93,42 +92,22 @@ def products(request):
     return render(request, 'products.html')
 
 
+@login_required
 def fetch_products(request):
     """
         fetch_products function retrieves all products in the D.B.
         and sends them to the front in JSON format
     """
-    products = []
-    data = {}
+    data, products = {}, []
 
-    try:
-        tcp = threaded_postgreSQL_pool
-        connection = tcp.getconn()
-        cursor = connection.cursor()
-        query = f'SELECT * FROM Product'
-        cursor.execute(query)
-        product_list = cursor.fetchall()
-        column_names = [desc[0] for desc in cursor.description]
-        for row in product_list:
-            products.append(
-                {
-                    'id': row[0],
-                    'name': row[1],
-                    'description': row[2],
-                    'price': row[3],
-                    'category': row[4],
-                    'provider': row[5],
-                }
-            )
+    resp = execute_query('SELECT * FROM Product', 'all')
+    if resp:
+        product_list = resp[1]
+        column_names = resp[0]
+        products = [{column:row[i] for i, column in enumerate(column_names)} for row in product_list]
         data['products'] = products
-        return JsonResponse(data)
-    except Exception as e:
-        data['products'] = 'error'
-        return JsonResponse(data)
-    finally:
-        if (tcp):
-            tcp.putconn(connection)
-            print("Threaded PostgreSQL connection pool is closed")
+
+    return JsonResponse(data)
 
 @login_required
 def table(request):
@@ -143,6 +122,64 @@ def form(request, type):
         Form function retrieves the form html
     """
     return render(request, 'form.html')
+
+
+@login_required
+def fetch_categories_and_providers(request):
+    """
+        fetch_areas function retrieves all products in the D.B.
+        and sends them to the front in JSON format
+    """
+    data, categories, providers = {}, [], []
+
+    resp = execute_query('SELECT category_key as key, name FROM Category', 'all')
+    if resp:
+        categories_list = resp[1]
+        column_names = resp[0]
+        categories = [{column:row[i] for i, column in enumerate(column_names)} for row in categories_list]
+
+    resp = execute_query('SELECT provider_key as key, name FROM Provider', 'all')
+    if resp:
+        providers_list = resp[1]
+        column_names = resp[0]
+        providers = [{column:row[i] for i, column in enumerate(column_names)} for row in providers_list]
+
+    data['categories'] = categories
+    data['providers'] = providers
+    return JsonResponse(data)
+
+
+@login_required
+def post_product(request):
+    data = {}
+    categorias = ['BOMBON', 'CHOCOLATE', 'CARAMELO', 'GALLETA', 'GOMITA', 'PALETA', 'PAPA']
+    proveedores = ['DLAROSA', 'RIKOLINO', 'WONKA', 'JOLLYRAN', 'GABI', 'MARINELA', 'GAMESA', 'CORONADO', 'SABRITAS', 'COYOTES']
+    if request.method == 'POST':
+        nombre = request.POST['nombre']
+        descripcion = request.POST['descripcion']
+        precio = request.POST['precio']
+        categoria = request.POST['categoria']
+        proveedor = request.POST['proveedor']
+        cantidad = request.POST['cantidad']
+        regex_precio = r'[0-9.]{,10}'
+        regex_cantitdad = r'[0-9]{,10}'
+        if not categoria in categorias or not proveedor in proveedores:
+            data['status'] = 400
+            data['error_desc'] = 'Categoria o Proveedor incorrectos'
+            return JsonResponse(data)
+        elif not re.match(regex_precio, precio) or not re.match(regex_cantitdad, cantidad):
+            data['status'] = 400
+            data['error_desc'] = 'Cantidad o Precio invalido'
+            return JsonResponse(data)
+        else:
+            resp = call_stored_procedure(f'SELECT addProduct(\'{nombre}\', \'{descripcion}\', {float(precio)}, \'{categoria}\', \'{proveedor}\', {int(cantidad)})', 'one')
+            if resp[1]:
+                data['status'] = 200
+                return JsonResponse(data)
+            else:
+                data['status'] = 400
+                return JsonResponse(data)
+
 
 
 @login_required
@@ -210,7 +247,7 @@ def notifications(request):
             # connection = tcp.getconn()
             # cursor = connection.cursor()
             # query = f'SELECT username, email FROM auth_user WHERE username = \'{username}\''
-            # cursor.execute(query)
+            # cursor.execute_query(query)
             # user = cursor.fetchone()
             # column_names = [desc[0] for desc in cursor.description]
             # user = [value for value in user]

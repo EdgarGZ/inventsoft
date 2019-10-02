@@ -164,6 +164,7 @@ CREATE TABLE Notification (
     transmitter EmployeeKey,
     description varchar(128),
     transmitter_area AreaCode,
+    notification_type decimal(2),
     primary key(notification_key)
 ) Without Oids;
 
@@ -171,16 +172,17 @@ CREATE TABLE Notification (
 Alter table Notification add foreign key (transmitter) references Employee (emp_key) on update cascade on delete set null;
 Alter table Notification add foreign key (transmitter_area) references Area (area_code) on update cascade on delete set null;
 
-CREATE TABLE NotiAdmin (
+CREATE TABLE NotiEmployee (
     id serial NOT NULL,
     last_notification NotificationKey,
-    area_admin EmployeeKey,
+    employee EmployeeKey,
+    area AreaCode,
     primary key(id)
 ) Without Oids;
 
 -- FOREIGN KEYS Notification
-Alter table NotiAdmin add foreign key (last_notification) references Notification (notification_key) on update cascade on delete cascade;
-Alter table NotiAdmin add foreign key (area_admin) references Employee (emp_key) on update cascade on delete cascade;
+Alter table NotiEmployee add foreign key (last_notification) references Notification (notification_key) on update cascade on delete cascade;
+Alter table NotiEmployee add foreign key (employee) references Employee (emp_key) on update cascade on delete cascade;
 
 -- INSERTS Area
 INSERT INTO Area VALUES('AAVEN','Administrador Ventas');
@@ -202,6 +204,14 @@ INSERT INTO Employee VALUES('AV001','rodrigo@mail.com','pbkdf2_sha256$150000$OXN
 INSERT INTO Employee VALUES('AAC01','margarita@mail.com','pbkdf2_sha256$150000$xwzLHlVLuCzf$fdbqPpA02u1sVusR90/nAhu/b7DQUWcLqDzBAMkwaKM=','Margarita', 'Prado', '2019-09-23 09:46:31.22461-05', 'AACOM', FALSE, TRUE, FALSE);
 INSERT INTO Employee VALUES('AAL01','alejandro@mail.com','pbkdf2_sha256$150000$xwzLHlVLuCzf$fdbqPpA02u1sVusR90/nAhu/b7DQUWcLqDzBAMkwaKM=','Alejandro', 'León', '2019-09-23 09:46:31.22461-05', 'AAALM', FALSE, TRUE, FALSE);
 
+
+INSERT INTO NotiEmployee VALUES(1, NULL, 'SA001', 'SADMI');
+INSERT INTO NotiEmployee VALUES(2, NULL, 'AA001', 'SADMI');
+INSERT INTO NotiEmployee VALUES(3, NULL, 'AC001', 'AA');
+INSERT INTO NotiEmployee VALUES(4, NULL, 'AV001', 'AC');
+INSERT INTO NotiEmployee VALUES(5, NULL, 'SA001', 'AV');
+INSERT INTO NotiEmployee VALUES(6, NULL, 'AAC01', 'AACOM');
+INSERT INTO NotiEmployee VALUES(7, NULL, 'AAL01', 'AAALM');
 
 -- INSERTS Category
 INSERT INTO Category VALUES('BOMBON','Bombones', 'Golosina elaborada con azúcar, claras, saborizantes y grenetina, cubierta con azúcar glass y almidón.');
@@ -387,5 +397,30 @@ INSERT INTO Stock VALUES(55, 'PROD0055', 20);
 INSERT INTO Stock VALUES(56, 'PROD0056', 20);
 INSERT INTO Stock VALUES(57, 'PROD0057', 20);
 INSERT INTO Stock VALUES(58, 'PROD0058', 20);
+
+-- STORED PROCEDURE
+CREATE OR REPLACE FUNCTION addNewEployee(emp_key EmployeeKey, email VARCHAR(75), passwrd VARCHAR(128), first_name varchar(50), last_name varchar(50), date_joined timestamp, area AreaCode, is_superuser boolean, is_areaadmin boolean, is_simplemortal boolean) RETURNS BOOLEAN AS 
+$$   
+  BEGIN
+    IF is_superuser THEN
+        INSERT INTO Employee VALUES(emp_key, email, passwrd, first_name, last_name, date_joined, area, TRUE, FALSE, FALSE);
+        RETURN found;  
+    ELSIF is_areadmin THEN
+        IF area = 'AA' THEN
+            INSERT INTO Employee VALUES('AAA01', email, passwrd, first_name, last_name, date_joined, area, FALSE, TRUE, FALSE);
+            RETURN found;
+        ELSIF area = 'AC' THEN
+            INSERT INTO Employee VALUES('AAC01', email, passwrd, first_name, last_name, date_joined, area, FALSE, TRUE, FALSE);
+            RETURN found;
+        ELSE
+            INSERT INTO Employee VALUES('AAV01', email, passwrd, first_name, last_name, date_joined, area, FALSE, TRUE, FALSE);
+            RETURN found;
+        END IF;
+    ELSE
+        INSERT INTO Employee VALUES(emp_key, email, passwrd, first_name, last_name, date_joined, area, FALSE, FALSE, TRUE);
+        RETURN found;
+    END IF;
+  END;
+$$ LANGUAGE 'plpgsql';
 
 """

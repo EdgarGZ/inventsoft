@@ -7,6 +7,7 @@ function navigate(url){
 async function getUserData() {
     const response = await fetch('/get_user/');
     const data = await response.json();
+    console.log(data.user)
     return data.user;
 }
 
@@ -23,7 +24,7 @@ async function getSingleton(){
 // Define the type of user: superuser, admin-area or employee
 const getUserType = (user) => {
     if(user.is_superuser) return 0;
-    if(user.is_adminarea) return 1;
+    if(user.is_areaadmin) return 1;
     if(user.is_simplemortal) return 2;
     else return 3;
 }
@@ -107,5 +108,3 @@ const getUserType = (user) => {
     const factoryFormView = (type) => { 
         return new FormViewFactory().create(type);
     }
-
-
