@@ -16,13 +16,13 @@ function resetInputError(){
     }
 }
 
-function showModal(text, location){
+function showModal(text, icon, location){
     document.body.innerHTML += `
         <div class="modal-back" id="modal-back">
             <div class="modal-container">
                 <div class="modal-div">
                     <h3>${text}</h3>
-                    <i class="fas fa-check-circle"></i>
+                    <i class="${icon}"></i>
                 </div>
             </div>
         </div>
@@ -33,4 +33,8 @@ function showModal(text, location){
             window.location.href = location;
         }, 1000)
     }
+}
+
+function navigate(url){
+    window.location.assign(url);
 }

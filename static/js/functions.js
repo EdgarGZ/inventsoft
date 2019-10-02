@@ -1,7 +1,3 @@
-function navigate(url){
-    window.location.assign(url);
-}
-
 // *** async function getUserData();
 // Get user data from server side
 async function getUserData() {
