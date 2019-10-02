@@ -1,4 +1,4 @@
-function ViewEmployeeStockTable(){
+function ViewEmployeeStockTable(data){
     this.template = `
         <div class="container-fluid main-container" id="main-container">
             <div class="row main-row-container">
@@ -19,12 +19,9 @@ function ViewEmployeeStockTable(){
                                 <th scope="col">Producto</th>
                                 <th scope="col">Cantidad</th>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Producto 1</td>
-                                    <td>100</td>
-                                </tr>
+                            <tbody>`;
+                                this.template += getStockEmployeeData(data);
+                                this.template += `</tbody>
                             </tbody>
                         </table>
                     </div>
@@ -34,7 +31,7 @@ function ViewEmployeeStockTable(){
     `;
 }
 
-function ViewAdminStockTable(){
+function ViewAdminStockTable(data){
     this.template = `
         <div class="container-fluid main-container" id="main-container">
             <div class="row main-row-container">
@@ -56,22 +53,9 @@ function ViewAdminStockTable(){
                                 <th scope="col">Producto</th>
                                 <th scope="col">Cantidad</th>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td class="table-actions">
-                                        <a href="/form/form-stock/" class="edit-row">
-                                            <i class="fas fa-pen"></i>
-                                            <span>Editar</span>
-                                        </a>
-                                        <a href="">
-                                            <i class="fas fa-trash"></i>
-                                            <span>Borrar</span>
-                                        </a>
-                                    </td>
-                                    <td>Producto 1</td>
-                                    <td>100</td>
-                                </tr>
+                            <tbody>`;
+                                this.template += getStockAdminData(data);
+                                this.template += `</tbody>
                             </tbody>
                         </table>
                     </div>

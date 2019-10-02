@@ -1,4 +1,4 @@
-function ViewEmployeePurchasesTable(){
+function ViewEmployeePurchasesTable(data){
     this.template = `
         <div class="container-fluid main-container" id="main-container">
             <div class="row main-row-container">
@@ -23,16 +23,9 @@ function ViewEmployeePurchasesTable(){
                                 <th scope="col">Comprador</th>
                                 <th scope="col">Fecha Compra</th>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Producto 1</td>
-                                    <td>100</td>
-                                    <td>Jhon Doe</td>
-                                    <td>500.00</td>
-                                    <td>Sara James</td>
-                                    <td>19-09-2019</td>
-                                </tr>
+                            <tbody>`;
+                                this.template += getPurchasesEmployeeData(data);
+                                this.template += `</tbody>
                             </tbody>
                         </table>
                     </div>
@@ -42,7 +35,7 @@ function ViewEmployeePurchasesTable(){
     `;
 }
 
-function ViewAdminPurchasesTable(){
+function ViewAdminPurchasesTable(data){
     this.template = `
         <div class="container-fluid main-container" id="main-container">
             <div class="row main-row-container">
@@ -68,26 +61,9 @@ function ViewAdminPurchasesTable(){
                                 <th scope="col">Comprador</th>
                                 <th scope="col">Fecha Compra</th>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td class="table-actions">
-                                        <a href="/form/form-purchases/" class="edit-row">
-                                            <i class="fas fa-pen"></i>
-                                            <span>Editar</span>
-                                        </a>
-                                        <a href="">
-                                            <i class="fas fa-trash"></i>
-                                            <span>Borrar</span>
-                                        </a>
-                                    </td>
-                                    <td>Producto 1</td>
-                                    <td>100</td>
-                                    <td>Jhon Doe</td>
-                                    <td>500.00</td>
-                                    <td>Sara James</td>
-                                    <td>19-09-2019</td>
-                                </tr>
+                            <tbody>`;
+                                this.template += getPurchasesAdminData(data);
+                                this.template += `</tbody
                             </tbody>
                         </table>
                     </div>

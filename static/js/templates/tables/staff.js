@@ -1,4 +1,4 @@
-function ViewAdminAreaStaffTable(){
+function ViewAdminAreaStaffTable(data){
     this.template = `
         <div class="container-fluid main-container" id="main-container">
             <div class="row main-row-container">
@@ -22,24 +22,9 @@ function ViewAdminAreaStaffTable(){
                                 <th scope="col">Apellido(s)</th>
                                 <th scope="col">Fecha Inicio</th>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">AA001</th>
-                                    <td class="table-actions">
-                                        <a href="/form/form-staff/" class="edit-row">
-                                            <i class="fas fa-pen"></i>
-                                            <span>Editar</span>
-                                        </a>
-                                        <a href="">
-                                            <i class="fas fa-trash"></i>
-                                            <span>Borrar</span>
-                                        </a>
-                                    </td>
-                                    <td>usuario@mail.com</td>
-                                    <td>Jhon</td>
-                                    <td>Doe</td>
-                                    <td>29-06-2019</td>
-                                </tr>
+                            <tbody>`;
+                                this.template += getStaffAdminAreaData(data);
+                                this.template += `</tbody>
                             </tbody>
                         </table>
                     </div>
@@ -49,7 +34,7 @@ function ViewAdminAreaStaffTable(){
     `;
 }
 
-function ViewSuperAdminStaffTable(){
+function ViewSuperAdminStaffTable(data){
     this.template = `
         <div class="container-fluid main-container" id="main-container">
             <div class="row main-row-container">
@@ -77,28 +62,9 @@ function ViewSuperAdminStaffTable(){
                                 <th scope="col">Area Admin</th>
                                 <th scope="col">Empleado</th>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">AA001</th>
-                                    <td class="table-actions">
-                                        <a href="/form/form-staff-admin/" class="edit-row">
-                                            <i class="fas fa-pen"></i>
-                                            <span>Editar</span>
-                                        </a>
-                                        <a href="">
-                                            <i class="fas fa-trash"></i>
-                                            <span>Borrar</span>
-                                        </a>
-                                    </td>
-                                    <td>usuario@mail.com</td>
-                                    <td>Jhon</td>
-                                    <td>Doe</td>
-                                    <td>29-06-2019</td>
-                                    <td>AV</td>
-                                    <td>false</td>
-                                    <td>false</td>
-                                    <td>true</td>
-                                </tr>
+                            <tbody>`;
+                                this.template += getStaffSuperAdminData(data);
+                                this.template += `</tbody>
                             </tbody>
                         </table>
                     </div>

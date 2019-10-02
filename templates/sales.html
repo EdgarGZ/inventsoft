@@ -16,13 +16,14 @@
 </head>
 
 <body>
-    
+
 </body>
 
 <script src="{% static 'js/design_patterns/factoryUserView.js' %}"></script>
 <script src="{% static 'js/design_patterns/singletonUser.js' %}"></script>
 <script src="{% static 'js/templates/nav.js' %}"></script>
 <script src="{% static 'js/templates/tables/sales.js' %}"></script>
+<script src="{% static 'js/templates/rows/sales.js' %}"></script>
 <script src="{% static 'js/functions.js' %}"></script>
 <script src="{% static 'js/styleFunctions.js' %}"></script>
 
@@ -30,7 +31,7 @@
     (async function(){
 
     // ------------------------------------------------
-        // get user
+        // Get user
         const user = await getSingleton();
         
     // ------------------------------------------------
@@ -38,8 +39,18 @@
         document.body.innerHTML += ViewNav(user);
 
     // ------------------------------------------------
-        // Get table specific options for that user type
-        document.body.innerHTML += factoryTableViewSales(user);
+        // Get table data
+        async function getSalesData() {
+            const response = await fetch('/fetch_sales/');
+            const data = await response.json();
+            return data.sales;
+        }
+
+        const data = await getSalesData();
+
+    // ------------------------------------------------
+        // Show table data and specific options for that user type
+        document.body.innerHTML += factoryTableViewSales(user, data);
 
     })();
 

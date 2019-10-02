@@ -1,4 +1,4 @@
-function ViewEmployeeSalesTable(){
+function ViewEmployeeSalesTable(data){
     this.template = `
         <div class="container-fluid main-container" id="main-container">
             <div class="row main-row-container">
@@ -23,16 +23,9 @@ function ViewEmployeeSalesTable(){
                                 <th scope="col">Vendedor</th>
                                 <th scope="col">Fecha Venta</th>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Producto 1</td>
-                                    <td>100</td>
-                                    <td>Jhon Doe</td>
-                                    <td>500.00</td>
-                                    <td>Sara James</td>
-                                    <td>19-09-2019</td>
-                                </tr>
+                            <tbody>`;
+                                this.template += getSalesEmployeeData(data);
+                                this.template += `</tbody>
                             </tbody>
                         </table>
                     </div>
@@ -42,7 +35,7 @@ function ViewEmployeeSalesTable(){
     `;
 }
 
-function ViewAdminSalesTable(){
+function ViewAdminSalesTable(data){
     this.template = `
         <div class="container-fluid main-container" id="main-container">
             <div class="row main-row-container">
@@ -68,26 +61,9 @@ function ViewAdminSalesTable(){
                                 <th scope="col">Vendedor</th>
                                 <th scope="col">Fecha Venta</th>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td class="table-actions">
-                                        <a href="/form/form-sales/" class="edit-row">
-                                            <i class="fas fa-pen"></i>
-                                            <span>Editar</span>
-                                        </a>
-                                        <a href="">
-                                            <i class="fas fa-trash"></i>
-                                            <span>Borrar</span>
-                                        </a>
-                                    </td>
-                                    <td>Producto 1</td>
-                                    <td>100</td>
-                                    <td>Jhon Doe</td>
-                                    <td>500.00</td>
-                                    <td>Sara James</td>
-                                    <td>19-09-2019</td>
-                                </tr>
+                            <tbody>`;
+                                this.template += getSalesAdminData(data);
+                                this.template += `</tbody>
                             </tbody>
                         </table>
                     </div>

@@ -1,14 +1,14 @@
 function getProductsEmployeeData(data){
     this.rows = "";
-    for(product of data){
+    for(element of data){
         this.rows += `
         <tr>
-            <th scope="row">${product.product_key}</th>
-            <td>${product.name}</td>
-            <td>${product.description}</td>
-            <td>${product.price}</td>
-            <td>${product.category}</td>
-            <td>${product.provider}</td>
+            <th scope="row">${element.product_key}</th>
+            <td>${element.name}</td>
+            <td>${element.description}</td>
+            <td>${element.price}</td>
+            <td>${element.category}</td>
+            <td>${element.provider}</td>
         </tr>
     `}
     return this.rows;
@@ -16,10 +16,10 @@ function getProductsEmployeeData(data){
 
 function getProductsAdminData(data){
     this.rows = "";
-    for(product of data){
+    for(element of data){
         this.rows += `
         <tr>
-            <th scope="row">${product.product_key}</th>
+            <th scope="row">${element.product_key}</th>
             <td class="table-actions">
                 <a href="/form/form-products/" class="edit-row">
                     <i class="fas fa-pen"></i>
@@ -30,11 +30,11 @@ function getProductsAdminData(data){
                     <span>Borrar</span>
                 </a>
             </td>
-            <td>${product.name}</td>
-            <td>${product.description}</td>
-            <td>${product.price}</td>
-            <td>${product.category}</td>
-            <td>${product.provider}</td>
+            <td>${element.name}</td>
+            <td>${element.description}</td>
+            <td>${element.price}</td>
+            <td>${element.category}</td>
+            <td>${element.provider}</td>
         </tr>
     `}
     return this.rows;

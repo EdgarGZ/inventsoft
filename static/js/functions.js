@@ -1,5 +1,3 @@
-
-
 function navigate(url){
     window.location.assign(url);
 }
@@ -52,44 +50,44 @@ const getUserType = (user) => {
 
     //*** function factoryTableViewPurchases()
     //Create Purchases table depending on the user type
-    const factoryTableViewPurchases = (user) =>{
+    const factoryTableViewPurchases = (user, data) =>{
         const type = getUserType(user);
-        view = new UserViewFactory(new ViewAdminPurchasesTable(),
-                                new ViewAdminPurchasesTable(),
-                                new ViewEmployeePurchasesTable(),
+        view = new UserViewFactory(new ViewAdminPurchasesTable(data),
+                                new ViewAdminPurchasesTable(data),
+                                new ViewEmployeePurchasesTable(data),
                                 ).create(type);
         return view.template;
     } 
 
     //*** function factoryTableViewSales()
     //Create Sales table depending on the user type
-    const factoryTableViewSales = (user) =>{
+    const factoryTableViewSales = (user, data) =>{
         const type = getUserType(user);
-        view = new UserViewFactory(new ViewAdminSalesTable(),
-                                new ViewAdminSalesTable(),
-                                new ViewEmployeeSalesTable(),
+        view = new UserViewFactory(new ViewAdminSalesTable(data),
+                                new ViewAdminSalesTable(data),
+                                new ViewEmployeeSalesTable(data),
                                 ).create(type);
         return view.template;
     } 
 
     //*** function factoryTableViewStaff()
     //Create Staff table depending on the user type
-    const factoryTableViewStaff = (user) =>{
+    const factoryTableViewStaff = (user, data) =>{
         const type = getUserType(user);
-        view = new UserViewFactory(new ViewSuperAdminStaffTable(),
-                                new ViewAdminAreaStaffTable(),
-                                new ViewAdminAreaStaffTable(),
+        view = new UserViewFactory(new ViewSuperAdminStaffTable(data),
+                                new ViewAdminAreaStaffTable(data),
+                                new ViewAdminAreaStaffTable(data),
                                 ).create(type);
         return view.template;
     } 
 
     //*** function factoryTableViewStock()
     //Create Stock table depending on the user type
-    const factoryTableViewStock = (user) =>{
+    const factoryTableViewStock = (user, data) =>{
         const type = getUserType(user);
-        const view = new UserViewFactory(new ViewAdminStockTable(),
-                                new ViewAdminStockTable(),
-                                new ViewEmployeeStockTable(),
+        const view = new UserViewFactory(new ViewAdminStockTable(data),
+                                new ViewAdminStockTable(data),
+                                new ViewEmployeeStockTable(data),
                                 ).create(type);
         return view.template;
     } 
