@@ -40,17 +40,24 @@
 
     // ------------------------------------------------
         // Get table data
-        async function getStockData() {
-            const response = await fetch('/fetch_stock/');
-            const data = await response.json();
-            return data.stock;
-        }
+        // async function getStockData() {
+        //     const response = await fetch('/fetch_stock/');
+        //     const data = await response.json();
+        //     return data.stock;
+        // }
 
-        const data = await getStockData();
+        // const data = await getStockData();
+
+    const testData = [{
+        id: 1,
+        product: 'PRODUCTO001',
+        amount: 13
+    }]          
+            
 
     // ------------------------------------------------
         // Show table data and specific options for that user type
-        document.body.innerHTML += factoryTableViewStock(user, data);
+        document.body.innerHTML += factoryTableViewStock(user, testData);
 
     })();
 

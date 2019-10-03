@@ -40,17 +40,28 @@
 
     // ------------------------------------------------
         // Get table data
-        async function getPurchasesData() {
-            const response = await fetch('/fetch_purchases/');
-            const data = await response.json();
-            return data.purchases;
-        }
+        // async function getPurchasesData() {
+        //     const response = await fetch('/fetch_purchases/');
+        //     const data = await response.json();
+        //     return data.purchases;
+        // }
 
-        const data = await getPurchasesData();
+        // const data = await getPurchasesData();
+
+    
+    const testData = [{
+        id: 01,
+        product: 'PROD001',
+        amount: 13,
+        provider: 'PROVEEDOR01',
+        total: 534.2,
+        buyer: 'COMPRADOR001',
+        purchase_date: '03-10-19'
+    }]
 
     // ------------------------------------------------
         // Show table data and specific options for that user type
-        document.body.innerHTML += factoryTableViewPurchases(user, data);
+        document.body.innerHTML += factoryTableViewPurchases(user, testData);
 
     })();
 

@@ -40,17 +40,27 @@
 
     // ------------------------------------------------
         // Get table data
-        async function getSalesData() {
-            const response = await fetch('/fetch_sales/');
-            const data = await response.json();
-            return data.sales;
-        }
+        // async function getSalesData() {
+        //     const response = await fetch('/fetch_sales/');
+        //     const data = await response.json();
+        //     return data.sales;
+        // }
 
-        const data = await getSalesData();
+        // const data = await getSalesData();
+
+    testData = [{
+        id: 1,
+        product: 'PRODUCTO001',
+        amount: 13,
+        client:'CLIENTE001',
+        total: 340,
+        seller:'VENDEDIR001',
+        sale_date: '03-10-19'
+    }]
 
     // ------------------------------------------------
         // Show table data and specific options for that user type
-        document.body.innerHTML += factoryTableViewSales(user, data);
+        document.body.innerHTML += factoryTableViewSales(user, testData);
 
     })();
 

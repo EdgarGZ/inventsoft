@@ -40,17 +40,29 @@
 
     // ------------------------------------------------
         // Get table data
-        async function getStaffData() {
-            const response = await fetch('/fetch_staff/');
-            const data = await response.json();
-            return data.staff;
-        }
+        // async function getStaffData() {
+        //     const response = await fetch('/fetch_staff/');
+        //     const data = await response.json();
+        //     return data.staff;
+        // }
 
-        const data = await getStaffData();
+        // const data = await getStaffData();
+
+        testData = [{
+            emp_key: 001,
+            email: 'correo@gmail.com',
+            first_name: 'María',
+            last_name: 'Pérez Rosales',
+            date_joined: '10-07-2019',
+            area: 'AA',
+            is_superuser: false,
+            is_areaadmin: false,
+            is_simplemortal: true
+        }]
 
     // ------------------------------------------------
         // Show table data and specific options for that user type
-        document.body.innerHTML += factoryTableViewStaff(user, data);
+        document.body.innerHTML += factoryTableViewStaff(user, testData);
 
     })();
 
