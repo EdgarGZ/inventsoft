@@ -19,6 +19,8 @@ from apps.usuarios.views import notifications
 from apps.usuarios.views import form
 from apps.usuarios.views import fetch_categories_and_providers
 from apps.usuarios.views import post_product
+from apps.usuarios.views import delete_product
+from apps.usuarios.views import fetch_product
 
 # URLPatterns
 app_name='usuarios'
@@ -42,4 +44,6 @@ urlpatterns = [
     path('notifications/', notifications, name='notifications'),
     path('categories_and_providers/', fetch_categories_and_providers, name='fetch_categories_and_providers'),
     path('post_product/', post_product, name='post_product'),
+    path('delete_product/<slug:id>/', delete_product, name='delete_product'),
+    path('fetch_product/<slug:id>/', fetch_product, name='fetch_product'),
 ]

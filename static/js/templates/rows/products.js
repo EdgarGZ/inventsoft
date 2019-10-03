@@ -25,10 +25,10 @@ function getProductsAdminData(data){
                     <i class="fas fa-pen"></i>
                     <span>Editar</span>
                 </a>
-                <a href="">
+                <button id='delete'>
                     <i class="fas fa-trash"></i>
                     <span>Borrar</span>
-                </a>
+                </button>
             </td>
             <td>${element.name}</td>
             <td>${element.description}</td>

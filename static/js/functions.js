@@ -3,14 +3,13 @@
 async function getUserData() {
     const response = await fetch('/get_user/');
     const data = await response.json();
-    console.log(data.user)
     return data.user;
 }
 
 // *** async function getSingleton();
 // Create Singleton Instance
 async function getSingleton(){
-    const userData = await getUserData(); 
+    const userData = await getUserData();
     const userInstance = userSingleton.getInstance(userData);
     const user = userInstance.getUser();
     return user;

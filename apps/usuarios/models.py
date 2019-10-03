@@ -399,6 +399,31 @@ INSERT INTO Stock VALUES(57, 'PROD0057', 20);
 INSERT INTO Stock VALUES(58, 'PROD0058', 20);
 
 -- STORED PROCEDURE
+CREATE OR REPLACE FUNCTION deleteProduct(id_product ProductKey) RETURNS BOOLEAN  AS
+$$
+   BEGIN
+    DELETE FROM Product WHERE product_key = id_product;
+    RETURN found;  
+   END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION editProduct(id_product ProductKey, new_name VARCHAR(75), new_description VARCHAR(75), new_price DECIMAL(10,2), new_category CategoryKey, new_provider ProviderKey, new_amount numeric(10)) RETURNS BOOLEAN AS 
+$$    
+  BEGIN
+    UPDATE Product  
+    SET name = new_name, description = new_description, price = new_price, category = new_category, provider = new_provider
+    WHERE product_key = id_product;  
+    IF found THEN
+		UPDATE Stock  
+        SET amount = new_amount
+        WHERE product = id_product; 
+        RETURN found;  
+    ELSE
+        RETURN found;
+    END IF;
+  END;
+$$ LANGUAGE 'plpgsql';
+
 CREATE OR REPLACE FUNCTION addNewEployee(emp_key EmployeeKey, email VARCHAR(75), passwrd VARCHAR(128), first_name varchar(50), last_name varchar(50), date_joined timestamp, area AreaCode, is_superuser boolean, is_areaadmin boolean, is_simplemortal boolean) RETURNS BOOLEAN AS 
 $$   
   BEGIN

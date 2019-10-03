@@ -23,6 +23,7 @@ def execute_query(query=None, command=None):
 
     return None
 
+
 def call_stored_procedure(query=None, command=None):
     if query and command:
         try:
@@ -46,3 +47,19 @@ def call_stored_procedure(query=None, command=None):
                 print("Threaded PostgreSQL connection pool is closed")
 
     return None
+
+
+def call_view(query=None):
+    try:
+        tcp = threaded_postgreSQL_pool
+        connection = tcp.getconn()
+        cursor = connection.cursor()
+        cursor.execute(query)
+        connection.commit()
+        return True
+    except Exception as e:
+        return False
+    finally:
+        if (tcp):
+            tcp.putconn(connection)
+            print("Threaded PostgreSQL connection pool is closed")

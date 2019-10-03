@@ -10,50 +10,37 @@ import psycopg2
 from inventsoft.connections_pool import threaded_postgreSQL_pool
 
 
+# Query
+from apps.usuarios.querys import execute_query
+
+
+
 def authenticate(username=None, password=None):
     """
         Authenticate function returns a user object or None.
 
         It takes 2 parameters, a username and a password.
     """
-    try:
-        tcp = threaded_postgreSQL_pool
-        connection = tcp.getconn()
-        cursor = connection.cursor()
-        query = f'SELECT emp_key, email, password, first_name, last_name, area, is_superuser, is_areaadmin, is_simplemortal FROM employee WHERE email = \'{username}\''
-        cursor.execute(query)
-        resp = cursor.fetchone()
-        column_names = [desc[0] for desc in cursor.description]
-        user_val = [value for value in resp]
-        user = {column:user_val[i] for i, column in enumerate(column_names)}
-        if check_password(password, user['password']):
-            return user      
-        return None 
-    except Exception as e:
-        return None  
-    finally:
-        if (tcp):
-            tcp.putconn(connection)
-            print("Threaded PostgreSQL connection pool is closed")
+    resp = execute_query(f'SELECT emp_key, email, password, first_name, last_name, area, is_superuser, is_areaadmin, is_simplemortal FROM employee WHERE email = \'{username}\'', 'one')
+    column_names = resp[0]
+    user_val = resp[1]
+    user = {column:user_val[i] for i, column in enumerate(column_names)}
+    if check_password(password, user['password']):
+        return user      
+    return None 
 
 def get_user(user_id=None):
     try:
-        tcp = threaded_postgreSQL_pool
-        connection = tcp.getconn()
-        cursor = connection.cursor()
-        query = f'SELECT emp_key, email, password, first_name, last_name, area, is_superuser, is_areaadmin, is_simplemortal FROM employee WHERE emp_key = {user_id}'
-        cursor.execute(query)
-        resp = cursor.fetchone()
-        column_names = [desc[0] for desc in cursor.description]
-        user_val = [value for value in resp]
+        resp = execute_query(f'SELECT emp_key, email, password, first_name, last_name, area, is_superuser, is_areaadmin, is_simplemortal FROM employee WHERE emp_key = \'{user_id}\'', 'one')
+        column_names = resp[0]
+        user_val = resp[1]
         user = {column:user_val[i] for i, column in enumerate(column_names)}
         return user
     except Exception as e:
         return None
-    finally:
-        if (tcp):
-            tcp.putconn(connection)
-            print("Threaded PostgreSQL connection pool is closed")
+
+def login(*args, **kwargs):
+    args[0].session['user'] = kwargs['user']
 
 """
 

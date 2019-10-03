@@ -119,7 +119,7 @@ function ViewFormProduct(){
                                     </select>
                                     <input id="cantidad" type="text" placeholder="Cantidad:">
                                     <button type="submit" class="btn btn-submit">Guardar</button>
-                                    <a href="" class="btn secondary-btn">Cancelar</a>
+                                    <a href="/products/" class="btn secondary-btn">Cancelar</a>
                                 </form>
                             </div>
                         </div>

@@ -17,10 +17,10 @@ from inventsoft.connections_pool import threaded_postgreSQL_pool
 
 
 # Auth
-from apps.usuarios.authentication import authenticate, get_user
+from apps.usuarios.authentication import authenticate, get_user, login
 
 # Query
-from apps.usuarios.querys import execute_query, call_stored_procedure
+from apps.usuarios.querys import execute_query, call_stored_procedure, call_view
 
 
 # Views
@@ -50,11 +50,11 @@ def login_user(request):
         if re.match(regex_email, username) and re.match(regex_pass, password):
             user = authenticate(username=username, password=password)
             if user:
+                login(request, user=user)
                 data = {
                     'response': user, 
                     'status': 200
                 }
-                request.session['user'] = user
                 return JsonResponse(data)
             else:
                 return response
@@ -68,8 +68,7 @@ def fetch_user(request):
     fetch_user function to retrieve te current logged in user
     """
     user = request.session['user']
-    resp = get_user(user_id=f'\'{user["emp_key"]}\'')
-    print(resp)
+    resp = get_user(user_id=f'{user["emp_key"]}')
     data = {
         'user': resp
     }
@@ -93,6 +92,23 @@ def products(request):
 
 
 @login_required
+def fetch_product(request,id):
+    
+    data, product, view_name = {}, [], f'{id}VIEW'
+
+    resp = call_view(f'CREATE OR REPLACE VIEW {view_name} AS SELECT Product.product_key, Product.name, Product.description, Product.price, Product.category, Product.provider, Stock.amount FROM Product, Stock WHERE Product.product_key = \'{id}\' AND Stock.product = \'{id}\';')
+    if resp:
+        resp = execute_query(f'SELECT * FROM {view_name}', 'one')
+        if resp:
+            product_list = resp[1]
+            column_names = resp[0]
+            product = {column:product_list[i] for i, column in enumerate(column_names)}
+            data['product'] = product
+        
+    return JsonResponse(data)
+
+
+@login_required
 def fetch_products(request):
     """
         fetch_products function retrieves all products in the D.B.
@@ -108,6 +124,95 @@ def fetch_products(request):
         data['products'] = products
 
     return JsonResponse(data)
+
+
+@login_required
+def post_product(request):
+    data = {}
+    categorias = ['BOMBON', 'CHOCOLATE', 'CARAMELO', 'GALLETA', 'GOMITA', 'PALETA', 'PAPA']
+    proveedores = ['DLAROSA', 'RIKOLINO', 'WONKA', 'JOLLYRAN', 'GABI', 'MARINELA', 'GAMESA', 'CORONADO', 'SABRITAS', 'COYOTES']
+    if request.method == 'POST':
+        nombre = request.POST['nombre']
+        descripcion = request.POST['descripcion']
+        precio = request.POST['precio']
+        categoria = request.POST['categoria']
+        proveedor = request.POST['proveedor']
+        cantidad = request.POST['cantidad']
+        accion = request.POST['accion']
+        if 'id' in request.POST:
+                idProduct = request.POST['id']
+        regex_precio = r'[0-9.]{,10}'
+        regex_cantitdad = r'[0-9]{,10}'
+        if not categoria in categorias or not proveedor in proveedores:
+            data['status'] = 400
+            data['error_desc'] = 'Categoria o Proveedor incorrectos'
+            return JsonResponse(data)
+        elif not re.match(regex_precio, precio) or not re.match(regex_cantitdad, cantidad):
+            data['status'] = 400
+            data['error_desc'] = 'Cantidad o Precio invalido'
+            return JsonResponse(data)
+        else:
+            if accion == 'NEW':
+                resp = call_stored_procedure(f'SELECT addProduct(\'{nombre}\', \'{descripcion}\', {float(precio)}, \'{categoria}\', \'{proveedor}\', {int(cantidad)})', 'one')
+                if resp[1]:
+                    data['status'] = 200
+                    return JsonResponse(data)
+                else:
+                    data['status'] = 400
+                    return JsonResponse(data)
+            elif accion == 'EDIT':
+                resp = call_stored_procedure(f'SELECT editProduct(\'{idProduct}\',\'{nombre}\', \'{descripcion}\', {float(precio)}, \'{categoria}\', \'{proveedor}\', {int(cantidad)})', 'one')
+                if resp[1]:
+                    data['status'] = 200
+                    return JsonResponse(data)
+                else:
+                    data['status'] = 400
+                    return JsonResponse(data)
+
+
+# @login_required
+# def post_product(request):
+#     data = {}
+#     categorias = ['BOMBON', 'CHOCOLATE', 'CARAMELO', 'GALLETA', 'GOMITA', 'PALETA', 'PAPA']
+#     proveedores = ['DLAROSA', 'RIKOLINO', 'WONKA', 'JOLLYRAN', 'GABI', 'MARINELA', 'GAMESA', 'CORONADO', 'SABRITAS', 'COYOTES']
+#     if request.method == 'POST':
+#         nombre = request.POST['nombre']
+#         descripcion = request.POST['descripcion']
+#         precio = request.POST['precio']
+#         categoria = request.POST['categoria']
+#         proveedor = request.POST['proveedor']
+#         cantidad = request.POST['cantidad']
+#         regex_precio = r'[0-9.]{,10}'
+#         regex_cantitdad = r'[0-9]{,10}'
+#         if not categoria in categorias or not proveedor in proveedores:
+#             data['status'] = 400
+#             data['error_desc'] = 'Categoria o Proveedor incorrectos'
+#             return JsonResponse(data)
+#         elif not re.match(regex_precio, precio) or not re.match(regex_cantitdad, cantidad):
+#             data['status'] = 400
+#             data['error_desc'] = 'Cantidad o Precio invalido'
+#             return JsonResponse(data)
+#         else:
+#             resp = call_stored_procedure(f'SELECT addProduct(\'{nombre}\', \'{descripcion}\', {float(precio)}, \'{categoria}\', \'{proveedor}\', {int(cantidad)})', 'one')
+#             if resp[1]:
+#                 data['status'] = 200
+#                 return JsonResponse(data)
+#             else:
+#                 data['status'] = 400
+#                 return JsonResponse(data)
+
+
+@login_required
+def delete_product(request, id):
+    data = {}
+    resp = call_stored_procedure(f'SELECT deleteProduct(\'{id}\')', 'one')
+    if resp[1]:
+        data['status'] = 200
+        return JsonResponse(data)
+    else:
+        data['status'] = 400
+        return JsonResponse(data)
+
 
 @login_required
 def table(request):
@@ -150,42 +255,9 @@ def fetch_categories_and_providers(request):
 
 
 @login_required
-def post_product(request):
-    data = {}
-    categorias = ['BOMBON', 'CHOCOLATE', 'CARAMELO', 'GALLETA', 'GOMITA', 'PALETA', 'PAPA']
-    proveedores = ['DLAROSA', 'RIKOLINO', 'WONKA', 'JOLLYRAN', 'GABI', 'MARINELA', 'GAMESA', 'CORONADO', 'SABRITAS', 'COYOTES']
-    if request.method == 'POST':
-        nombre = request.POST['nombre']
-        descripcion = request.POST['descripcion']
-        precio = request.POST['precio']
-        categoria = request.POST['categoria']
-        proveedor = request.POST['proveedor']
-        cantidad = request.POST['cantidad']
-        regex_precio = r'[0-9.]{,10}'
-        regex_cantitdad = r'[0-9]{,10}'
-        if not categoria in categorias or not proveedor in proveedores:
-            data['status'] = 400
-            data['error_desc'] = 'Categoria o Proveedor incorrectos'
-            return JsonResponse(data)
-        elif not re.match(regex_precio, precio) or not re.match(regex_cantitdad, cantidad):
-            data['status'] = 400
-            data['error_desc'] = 'Cantidad o Precio invalido'
-            return JsonResponse(data)
-        else:
-            resp = call_stored_procedure(f'SELECT addProduct(\'{nombre}\', \'{descripcion}\', {float(precio)}, \'{categoria}\', \'{proveedor}\', {int(cantidad)})', 'one')
-            if resp[1]:
-                data['status'] = 200
-                return JsonResponse(data)
-            else:
-                data['status'] = 400
-                return JsonResponse(data)
-
-
-
-@login_required
 def logout(request):
     response = redirect('usuarios:render_login')
-    response.delete_cookie('user')
+    del request.session['user']
     return response
 
 @login_required
@@ -265,4 +337,5 @@ def notifications(request):
     #         'response': user_object,
     #         'status': 200
     #     }
+    #     return JsonResponse(data)
     #     return JsonResponse(data)
