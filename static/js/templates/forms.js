@@ -9,21 +9,19 @@ function ViewFormPurchases(){
                     <div class="row row-form-container">
                         <div class="col-10 col-sm-8 col-lg-5 col-xl-4 col-form-container">
                             <div class="form-container">
-                                <form action="" class="form">
-                                    <select name="" id="" placeholder="Producto">
-                                        <option value="">-- Producto --</option>
+                                <form action="." id="formPurchase" method="POST" class="form">
+                                    <select name="" id="producto" placeholder="Producto">
                                     </select>
-                                    <input type="text" placeholder="Cantidad">
-                                    <input type="text" placeholder="Total:">
-                                    <select name="" id="" placeholder="Cliente">
-                                        <option value="">-- Proveedor --</option>
-                                    </select>
-                                    <select name="" id="" placeholder="Vendedor">
-                                        <option value="">-- Comprador --</option>
+                                    <input type="number" id="cantidad" placeholder="Cantidad" onkeydown="return false">
+                                    <input type="text" id="stock" readonly>
+                                    <input type="text" id="total" placeholder="Total:" readonly>
+                                    <input type="text" id="proveedor" placeholder="Proveedor:" readonly>
+                                    <input type="hidden" id='idProveedor'>
+                                    <select name="" id="vendedor" placeholder="Vendedor">
                                     </select>
 
                                     <button type="submit" class="btn btn-submit">Guardar</button>
-                                    <a href="" class="btn secondary-btn">Cancelar</a>
+                                    <a class="btn secondary-btn">Cancelar</a>
                                 </form>
                             </div>
                         </div>
@@ -45,21 +43,17 @@ function ViewFormSales(){
                     <div class="row row-form-container">
                         <div class="col-10 col-sm-8 col-lg-5 col-xl-4 col-form-container">
                             <div class="form-container">
-                                <form action="" class="form">
-                                    <select name="" id="" placeholder="Producto">
-                                        <option value="">-- Producto --</option>
+                                <form action="." id="formSales" method="POST" class="form">
+                                    <select name="" id="producto" placeholder="Producto">
                                     </select>
-                                    <input type="text" placeholder="Cantidad">
-                                    <input type="text" placeholder="Total:">
-                                    <select name="" id="" placeholder="Cliente">
-                                        <option value="">-- Cliente --</option>
+                                    <input type="number" id="cantidad" placeholder="Cantidad" onkeydown="return false">
+                                    <input type="text" id="total" placeholder="Total:" readonly>
+                                    <select name="" id="cliente" placeholder="Cliente">
                                     </select>
-                                    <select name="" id="" placeholder="Vendedor">
-                                        <option value="">-- Vendedor --</option>
+                                    <select name="" id="vendedor" placeholder="Vendedor">
                                     </select>
-
                                     <button type="submit" class="btn btn-submit">Guardar</button>
-                                    <a href="" class="btn secondary-btn">Cancelar</a>
+                                    <a href="/sales/" class="btn secondary-btn">Cancelar</a>
                                 </form>
                             </div>
                         </div>
@@ -81,13 +75,11 @@ function ViewFormStock(){
                     <div class="row row-form-container">
                         <div class="col-10 col-sm-7 col-lg-5 col-xl-3 col-form-container">
                             <div class="form-container">
-                                <form action="" class="form">
-                                    <select name="" id="" placeholder="Producto">
-                                        <option value="">-- Producto --</option>
-                                    </select>
-                                    <input type="text" placeholder="Cantidad:">
+                                <form id="formStock" action="." method="POST" class="form">
+                                    <input type="text" id="producto" placeholder="Producto:" readonly disabled>                                    
+                                    <input type="number" id="cantidad" placeholder="Cantidad:" min="1">
                                     <button type="submit" class="btn btn-submit">Guardar</button>
-                                    <a href="" class="btn secondary-btn">Cancelar</a>
+                                    <a href="/stock/" class="btn secondary-btn">Cancelar</a>
                                 </form>
                             </div>
                         </div>

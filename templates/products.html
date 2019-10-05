@@ -29,7 +29,7 @@
 
 <script>
     (async function(){
-
+        localStorage.removeItem('productKey');
     // ------------------------------------------------
         // Get user
         const user = await getSingleton();
@@ -53,7 +53,7 @@
 			const data = await response.json()
 			return data;
 		}
-
+         console.log(getUserType(user))
     // ------------------------------------------------
         // Show table data and specific options for that user type
         document.body.innerHTML += factoryTableViewProducts(user, data);
@@ -68,7 +68,6 @@
 
                 try{
                     const data = await sendData(`http://127.0.0.1:8000/delete_product/${productKey}/`);
-                    console.log(data);
                     if (data.status === 200){
                         // alert('Se elimino el registro')
                         deleteButton.parentElement.parentElement.remove();

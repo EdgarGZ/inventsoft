@@ -21,6 +21,20 @@ from apps.usuarios.views import fetch_categories_and_providers
 from apps.usuarios.views import post_product
 from apps.usuarios.views import delete_product
 from apps.usuarios.views import fetch_product
+from apps.usuarios.views import fetch_product_stock
+from apps.usuarios.views import fetch_stock_product
+from apps.usuarios.views import fetch_clients
+from apps.usuarios.views import fetch_sellers
+from apps.usuarios.views import fetch_buyers
+from apps.usuarios.views import sell_product
+from apps.usuarios.views import fetch_sales
+from apps.usuarios.views import fetch_purchases
+from apps.usuarios.views import delete_sale
+from apps.usuarios.views import delete_purchase
+from apps.usuarios.views import fetch_provider
+from apps.usuarios.views import buy_product
+from apps.usuarios.views import fetch_stock
+from apps.usuarios.views import edit_stock
 
 # URLPatterns
 app_name='usuarios'
@@ -46,4 +60,20 @@ urlpatterns = [
     path('post_product/', post_product, name='post_product'),
     path('delete_product/<slug:id>/', delete_product, name='delete_product'),
     path('fetch_product/<slug:id>/', fetch_product, name='fetch_product'),
+    path('fetch_product_stock/<slug:id>/', fetch_product_stock, name='fetch_product_stock'),
+    path('fetch_provider/<slug:id>/', fetch_provider, name='fetch_provider'),
+    path('fetch_clients/', fetch_clients, name='fetch_clients'),
+    path('fetch_sellers/', fetch_sellers, name='fetch_sellers'),
+    path('fetch_buyers/', fetch_buyers, name='fetch_buyers'),
+    path('sell_product/', sell_product, name='sell_product'),
+    path('buy_product/', buy_product, name='buy_product'),
+    path('fetch_sales/<slug:flag>/', fetch_sales, name='fetch_sales'),
+    path('fetch_sales/<slug:flag>/<slug:user>/', fetch_sales, name='fetch_sales1'),
+    path('fetch_purchases/<slug:flag>/', fetch_purchases, name='fetch_purchases'),
+    path('fetch_purchases/<slug:flag>/<slug:user>/', fetch_purchases, name='fetch_purchases1'),
+    path('fetch_stock/', fetch_stock, name='fetch_stock'),
+    path('delete_sale/<slug:id>/', delete_sale, name='delete_sale'),
+    path('delete_purchase/<slug:id>/', delete_purchase, name='delete_purchase'),
+    path('fetch_stock_product/<slug:id>/', fetch_stock_product, name='fetch_stock_product'),
+    path('edit_stock/', edit_stock, name='edit_stock'),
 ]

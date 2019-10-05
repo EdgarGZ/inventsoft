@@ -42,6 +42,27 @@
         // Get form specific options for that form type
         document.body.innerHTML += factoryFormView(getFormType());
 
+        function setAttributes(element, attributes){
+            for(const attribute in attributes){
+                element.setAttribute(attribute, attributes[attribute])
+            }
+        }
+
+        const CSRF_TOKEN = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        const ETIQUETAA = document.getElementsByClassName('secondary-btn')[0];  
+
+        async function mandarData(url, data){
+            const response = await fetch(url, {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'X-CSRFToken': CSRF_TOKEN
+                }
+            })
+            const resp = await response.json();
+            return resp;
+        }
+
         if(getFormType() === '/form-products/'){
 
             let privateProductStorage = "";
@@ -53,12 +74,6 @@
             }
 
             const data = await getCatAndProvData()
-
-            function setAttributes(element, attributes){
-                for(const attribute in attributes){
-                    element.setAttribute(attribute, attributes[attribute])
-                }
-            }
 
             function addOptions(selectName, data){
                 selectElement = document.getElementById(selectName);
@@ -86,27 +101,12 @@
                 uppercase: true
             });
 
-            const FORMPRODUCTO = document.querySelector('#formProducto');
-            const CSRF_TOKEN = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-
-            async function mandarData(url, data){
-                const response = await fetch(url, {
-                    method: 'POST',
-                    body: data,
-                    headers: {
-                        'X-CSRFToken': CSRF_TOKEN
-                    }
-                })
-                const resp = await response.json();
-                return resp;
-            }
-            
+            const FORMPRODUCTO = document.querySelector('#formProducto');            
 
             if(localStorage.getItem('productKey')){
                 privateProductStorage = localStorage.getItem('productKey');
 
                 let titulo = document.getElementsByClassName('result-title')[0];
-                console.log(titulo)
                 titulo.innerHTML = '';
                 titulo.innerHTML = '<h2>Editar Producto</h2>';
 
@@ -131,8 +131,6 @@
 
                 if(document.getElementById('nombre').value !== '' && document.getElementById('descripcion').value !== '' && document.getElementById('precio').value !== '' && document.getElementById('categoria').value !== '' && document.getElementById('proveedor').value !== '' && document.getElementById('cantidad').value !== ''){
                     const form = new FormData();
-                    if (privateProductStorage){
-                    }
                     form.append('nombre', document.getElementById('nombre').value);
                     form.append('descripcion', document.getElementById('descripcion').value);
                     form.append('precio', document.getElementById('precio').value);
@@ -140,7 +138,6 @@
                     form.append('proveedor', document.getElementById('proveedor').value);
                     form.append('cantidad', document.getElementById('cantidad').value);
                     if (privateProductStorage){
-                        console.log('si')
                         form.append('accion', 'EDIT');
                         form.append('id', privateProductStorage.product_key);
                     } else {
@@ -151,7 +148,7 @@
                         const data = await mandarData('http://127.0.0.1:8000/post_product/', form);
                         if (data.status === 200) {
                             if (privateProductStorage){
-                                localStorage.removeItem('productKey')
+                                localStorage.removeItem('productKey');
                                 showModal('Producto actualizado <br> correctamente', 'fas fa-check-circle', '/products/');
                             } else{
                                 showModal('Producto registrado <br> correctamente', 'fas fa-check-circle', '/products/');
@@ -168,10 +165,326 @@
                 }
         })
 
-        console.log(privateProductStorage.category);
         } else if(getFormType() === '/form-sales/') {
-            alert('SALES')
-        }
+            // alert('SALES')
+            const FORMVENTA = document.querySelector('#formSales');
+            let inputProducto = document.getElementById('producto');
+            let inputCantidad = document.getElementById('cantidad');
+            let inputTotal = document.getElementById('total');
+
+            async function getData(url) {
+                const response = await fetch(url);
+                const data = await response.json();
+                return data;
+            }
+
+            setAttributes(ETIQUETAA, {
+                href: '/sales/',
+            })
+
+            const products = await getData('http://127.0.0.1:8000/fetch_products/');
+            const clientes = await getData('http://127.0.0.1:8000/fetch_clients/');
+            let sellers;
+            if(getUserType(user) == 0 || getUserType(user) == 1){
+                sellers = await getData('http://127.0.0.1:8000/fetch_sellers/');
+            } else if(getUserType(user) == 2){
+                sellers = user;
+            }
+            let idProduct;
+            let prod;
+
+            function addOptions(selectName, data){
+                selectElement = document.getElementById(selectName);
+
+                for(let i = 0; i < data.length; i++){
+                    const optionElement = document.createElement('option');
+                    if(i === 0){
+                        setAttributes(optionElement, {
+                            value: data[i].key,
+                            selected: true
+                        }) 
+                        idProduct = data[i].key;
+                        prod = products.products.find(x => x.key === data[i].key);
+                    } else {
+                        setAttributes(optionElement, {
+                            value: data[i].key,
+                        }) 
+                    }
+                    optionElement.innerHTML = data[i].name;
+                    selectElement.appendChild(optionElement);
+                }
+            }
+
+            function addOptionsUsers(selectName, data){
+                selectElement = document.getElementById(selectName);
+
+                for(let i = 0; i < data.length; i++){
+                    const optionElement = document.createElement('option');
+                    if(i === 0){
+                        setAttributes(optionElement, {
+                            value: data[i].key,
+                            selected: true
+                        }) 
+                    } else {
+                        setAttributes(optionElement, {
+                            value: data[i].key,
+                        }) 
+                    }
+                    optionElement.innerHTML = data[i].name;
+                    selectElement.appendChild(optionElement);
+                }
+            }
+
+            if(getUserType(user) == 0 || getUserType(user) == 1){
+                addOptionsUsers('vendedor', sellers.sellers);
+            } else if(getUserType(user) == 2){
+                let vend = document.getElementById('vendedor');
+                vend.disabled = true;
+                const optionElement = document.createElement('option');
+                setAttributes(optionElement, {
+                    value: user.emp_key,
+                }) 
+                optionElement.innerHTML = `${user.first_name} ${user.last_name}`;
+                vend.appendChild(optionElement);
+            }
+
+            addOptions('producto', products.products);
+            addOptionsUsers('cliente', clientes.clients);
+
+            let stock = await getData(`http://127.0.0.1:8000/fetch_product_stock/${idProduct}/`);
+            setAttributes(document.getElementById('cantidad'), {
+                min: 1,
+                max: stock.stock.amount
+            });
+
+            inputProducto.addEventListener('change', async (e) => {
+                prod = products.products.find(x => x.key === e.target.value);
+                inputCantidad.value = 1;
+                inputTotal.value = prod.price ;
+                stock = await getData(`http://127.0.0.1:8000/fetch_product_stock/${prod.key}/`);
+                setAttributes(document.getElementById('cantidad'), {
+                    min: 1,
+                    max: stock.stock.amount
+                });
+            })
+
+            inputCantidad.addEventListener('change', async (e) => {
+                totalPrecio = prod.price * inputCantidad.value;
+                inputTotal.value = totalPrecio;
+            })
+
+            FORMVENTA.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                if(document.getElementById('producto').value !== '' && document.getElementById('cantidad').value !== '' && document.getElementById('total').value !== '' && document.getElementById('cliente').value !== '' && document.getElementById('vendedor').value !== ''){
+                    const form = new FormData();
+                    form.append('product', document.getElementById('producto').value);
+                    form.append('amount', document.getElementById('cantidad').value);
+                    form.append('total', document.getElementById('total').value);
+                    form.append('client', document.getElementById('cliente').value);
+                    form.append('employee', document.getElementById('vendedor').value);
+
+                    try {
+                        const data = await mandarData('http://127.0.0.1:8000/sell_product/', form);
+                        if (data.status === 200) {
+                            showModal('Venta registrada <br> correctamente', 'fas fa-check-circle', '/sales/');
+                        } else {
+                            showModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times',);
+                        }
+                    } catch (error) {
+                        
+                    }
+                } else {
+                    alert('Llenar todos los campos')
+                }
+            })
+        } else if(getFormType() === '/form-purchases/') {
+            const FORMCOMPRA = document.querySelector('#formPurchase');
+            let inputProducto = document.getElementById('producto');
+            let inputCantidad = document.getElementById('cantidad');
+            let inputTotal = document.getElementById('total');
+            let inputProveedor = document.getElementById('proveedor');
+            let inputIdProveedor = document.getElementById('idProveedor');
+            let inputStock = document.getElementById('stock');
+
+            async function getData(url) {
+                const response = await fetch(url);
+                const data = await response.json();
+                return data;
+            }
+
+            setAttributes(ETIQUETAA, {
+                href: '/purchases/',
+            }) 
+
+            const products = await getData('http://127.0.0.1:8000/fetch_products/');
+            const providers = await getData('http://127.0.0.1:8000/categories_and_providers/');
+            let buyers;
+            if(getUserType(user) == 0 || getUserType(user) == 1){
+                buyers = await getData('http://127.0.0.1:8000/fetch_buyers/');;
+            } else if(getUserType(user) == 2){
+                buyers = user;
+            }
+            let idProduct;
+            let prod;
+
+            function addOptions(selectName, data){
+                selectElement = document.getElementById(selectName);
+
+                for(let i = 0; i < data.length; i++){
+                    const optionElement = document.createElement('option');
+                    if(i === 0){
+                        setAttributes(optionElement, {
+                            value: data[i].key,
+                            selected: true
+                        }) 
+                        idProduct = data[i].key;
+                        prod = products.products.find(x => x.key === data[i].key);
+                    } else {
+                        setAttributes(optionElement, {
+                            value: data[i].key,
+                        }) 
+                    }
+                    optionElement.innerHTML = data[i].name;
+                    selectElement.appendChild(optionElement);
+                }
+            }
+
+            function addOptionsUsers(selectName, data){
+                selectElement = document.getElementById(selectName);
+
+                for(let i = 0; i < data.length; i++){
+                    const optionElement = document.createElement('option');
+                    if(i === 0){
+                        setAttributes(optionElement, {
+                            value: data[i].key,
+                            selected: true
+                        }) 
+                    } else {
+                        setAttributes(optionElement, {
+                            value: data[i].key,
+                        }) 
+                    }
+                    optionElement.innerHTML = data[i].name;
+                    selectElement.appendChild(optionElement);
+                }
+            }
+
+            if(getUserType(user) == 0 || getUserType(user) == 1){
+                addOptionsUsers('vendedor', buyers.buyers);
+            } else if(getUserType(user) == 2){
+                let vend = document.getElementById('vendedor');
+                vend.disabled = true;
+                const optionElement = document.createElement('option');
+                setAttributes(optionElement, {
+                    value: user.emp_key,
+                }) 
+                optionElement.innerHTML = `${user.first_name} ${user.last_name}`;
+                vend.appendChild(optionElement);
+            }
+
+            addOptions('producto', products.products);
+            addOptionsUsers('proveedor', providers.providers);
+
+            setAttributes(document.getElementById('cantidad'), {
+                min: 1,
+            });
+
+            let proveedor = await getData(`http://127.0.0.1:8000/fetch_provider/${prod.provider}/`);
+            inputProveedor.value = proveedor.provider.name
+            inputIdProveedor.value = proveedor.provider.provider_key
+            let stock = await getData(`http://127.0.0.1:8000/fetch_product_stock/${idProduct}/`);
+            inputStock.value = stock.stock.amount
+
+            inputProducto.addEventListener('change', async (e) => {
+                prod = products.products.find(x => x.key === e.target.value);
+                inputCantidad.value = 1;
+                inputTotal.value = prod.price;
+                proveedor = await getData(`http://127.0.0.1:8000/fetch_provider/${prod.provider}/`);
+                inputProveedor.value = proveedor.provider.name;
+                inputIdProveedor.value = proveedor.provider.provider_key;
+                stock = await getData(`http://127.0.0.1:8000/fetch_product_stock/${prod.key}/`);
+                inputStock.value = stock.stock.amount;
+            })
+
+            inputCantidad.addEventListener('change', async (e) => {
+                totalPrecio = prod.price * inputCantidad.value;
+                inputTotal.value = totalPrecio;
+            })
+
+            FORMCOMPRA.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                if(document.getElementById('producto').value !== '' && document.getElementById('cantidad').value !== '' && document.getElementById('total').value !== '' && document.getElementById('proveedor').value !== '' && document.getElementById('vendedor').value !== ''){
+                    const form = new FormData();
+                    form.append('product', document.getElementById('producto').value);
+                    form.append('amount', document.getElementById('cantidad').value);
+                    form.append('total', document.getElementById('total').value);
+                    form.append('provider', document.getElementById('idProveedor').value);
+                    form.append('employee', document.getElementById('vendedor').value);
+
+                    try {
+                        console.log('si')
+                        const data = await mandarData('http://127.0.0.1:8000/buy_product/', form);
+                        if (data.status === 200) {
+                            showModal('Compra registrada <br> correctamente', 'fas fa-check-circle', '/purchases/');
+                        } else {
+                            showModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times',);
+                        }
+                    } catch (error) {
+                        console.log(error)
+                    }
+                } else {
+                    alert('Llenar todos los campos')
+                }
+            })
+        } else if(getFormType() === '/form-stock/'){
+
+            let privateProductStorage = "";
+            privateProductStorage = localStorage.getItem('stockKey');
+            const FORMSTOCK = document.querySelector('#formStock');
+
+            async function getStockData() {
+                const response = await fetch(`/fetch_stock_product/${privateProductStorage}/`);
+                const data = await response.json();
+                return data;
+            }
+
+            let titulo = document.getElementsByClassName('result-title')[0];
+            titulo.innerHTML = '';
+            titulo.innerHTML = '<h2>Editar Almacen</h2>';
+
+            privateProductStorage = await getStockData();
+
+            document.getElementById("producto").value = privateProductStorage.stock.product_name;
+            document.getElementById("cantidad").value = privateProductStorage.stock.amount;
+
+            FORMSTOCK.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                if(document.getElementById('producto').value !== '' && document.getElementById('cantidad').value !== ''){
+                    const form = new FormData();
+                    form.append('producto', privateProductStorage.stock.product);
+                    form.append('cantidad', document.getElementById('cantidad').value);
+
+                    try {
+                        const data = await mandarData('http://127.0.0.1:8000/edit_stock/', form);
+                        if (data.status === 200) {
+                            showModal('Almacen actualizado <br> correctamente', 'fas fa-check-circle', '/stock/');
+                        } else {
+                            showModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times',);
+                        }
+                    } catch (error) {
+                        console.log('error')
+                    }
+
+                } else {
+                    alert('Llenar todos los campos')
+                }
+            })
+
+            console.log(privateProductStorage.category);
+            }
     })();
 
 </script>

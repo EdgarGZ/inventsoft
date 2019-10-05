@@ -11,6 +11,10 @@ function getStockEmployeeData(data){
     return this.rows;
 }
 
+//<a href="">
+//    <i class="fas fa-trash"></i>
+//    <span>Borrar</span>
+//</a>
 function getStockAdminData(data){
     this.rows = "";
     for(element of data){
@@ -22,12 +26,8 @@ function getStockAdminData(data){
                         <i class="fas fa-pen"></i>
                         <span>Editar</span>
                     </a>
-                    <a href="">
-                        <i class="fas fa-trash"></i>
-                        <span>Borrar</span>
-                    </a>
                 </td>
-                <td>${element.product}</td>
+                <td>${element.product_name}</td>
                 <td>${element.amount}</td>
             </tr>
     `}

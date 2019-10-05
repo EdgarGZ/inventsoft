@@ -129,6 +129,16 @@ CREATE TABLE Stock (
 -- FOREIGN KEYS Stock
 Alter table Stock add foreign key (product) references Product (product_key) on update cascade on delete cascade;
 
+CREATE OR REPLACE FUNCTION editStock(id_product ProductKey, new_amount numeric(10)) RETURNS BOOLEAN AS 
+$$    
+  BEGIN
+    UPDATE Stock  
+    SET amount = new_amount
+    WHERE product = id_product;  
+    RETURN found;
+  END;
+$$ LANGUAGE 'plpgsql';
+
 CREATE TABLE Purchase (
     id serial NOT NULL,
     product ProductKey NOT NULL,
@@ -144,6 +154,40 @@ CREATE TABLE Purchase (
 Alter table Purchase add foreign key (provider) references Provider (provider_key) on update cascade on delete set null;
 Alter table Purchase add foreign key (buyer) references Employee (emp_key) on update cascade on delete set null;
 
+CREATE OR REPLACE FUNCTION purchaseProduct(id_product ProductKey, amount_product numeric(10), provider ProviderKey, total numeric(12,2), buyer EmployeeKey) RETURNS BOOLEAN AS 
+$$    
+  DECLARE
+	purchase_date timestamp; 
+	amount_purchase decimal(10);
+	current_amount decimal(10);
+	new_amount decimal(10);
+	id_purchase decimal(10);
+  BEGIN
+	SELECT now() INTO purchase_date;
+	  Select nextval(pg_get_serial_sequence('Sale', 'id')) INTO id_purchase;
+	amount_purchase:= amount_product;
+	INSERT INTO Purchase VALUES(id_purchase, id_product, amount_product, provider, total, buyer, purchase_date);
+	IF found THEN
+	SELECT amount INTO current_amount FROM Stock WHERE product = id_product;
+	new_amount := current_amount + amount_purchase;
+		UPDATE Stock  
+		SET amount = new_amount
+		WHERE product = id_product; 
+		RETURN found;   
+	ELSE
+		RETURN found;
+	END IF;
+  END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION deletePurchase(id_purchase decimal(10)) RETURNS BOOLEAN  AS
+$$
+   BEGIN
+    DELETE FROM Purchase WHERE id = id_purchase;
+    RETURN found;  
+   END;
+$$ LANGUAGE 'plpgsql';
+
 CREATE TABLE Sale (
     id serial NOT NULL,
     product ProductKey NOT NULL,
@@ -158,6 +202,40 @@ CREATE TABLE Sale (
 -- FOREIGN KEYS Sale
 Alter table Sale add foreign key (client) references Client (client_key) on update cascade on delete set null;
 Alter table Sale add foreign key (seller) references Employee (emp_key) on update cascade on delete set null;
+
+CREATE OR REPLACE FUNCTION sellProduct(id_product ProductKey, amount_product numeric(10), client ClientKey, total numeric(12,2), seller EmployeeKey) RETURNS BOOLEAN AS 
+$$    
+  DECLARE
+    sell_date timestamp; 
+    amount_sale decimal(10);
+    current_amount decimal(10);
+    new_amount decimal(10);
+	  id_sell decimal(10);
+  BEGIN
+    SELECT now() INTO sell_date;
+	  Select nextval(pg_get_serial_sequence('Sale', 'id')) INTO id_sell;
+    amount_sale:= amount_product;
+    INSERT INTO Sale VALUES(id_sell, id_product, amount_product, client, total, seller, sell_date);
+    IF found THEN
+    SELECT amount INTO current_amount FROM Stock WHERE product = id_product;
+    new_amount := current_amount - amount_sale;
+		UPDATE Stock  
+        SET amount = new_amount
+        WHERE product = id_product; 
+        RETURN found;   
+    ELSE
+        RETURN found;
+    END IF;
+  END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION deleteSale(id_sale decimal(10)) RETURNS BOOLEAN  AS
+$$
+   BEGIN
+    DELETE FROM Sale WHERE id = id_sale;
+    RETURN found;  
+   END;
+$$ LANGUAGE 'plpgsql';
 
 CREATE TABLE Notification (
     notification_key NotificationKey NOT NULL,
@@ -199,10 +277,15 @@ INSERT INTO Employee VALUES('SA002','paola@mail.com','pbkdf2_sha256$150000$k0Pyw
 -- Password: employee123
 INSERT INTO Employee VALUES('AA001','juan@mail.com','pbkdf2_sha256$150000$OXNYAGopz2wm$L9VkR91l0dEbZgPVmUk2tUwK5CQelrakG9pdiSsq9Qg=','Juan', 'López', '2019-09-23 09:46:31.22461-05', 'AA', FALSE, FALSE, TRUE);
 INSERT INTO Employee VALUES('AC001','maria@mail.com','pbkdf2_sha256$150000$OXNYAGopz2wm$L9VkR91l0dEbZgPVmUk2tUwK5CQelrakG9pdiSsq9Qg=','Maria', 'Echeverria', '2019-09-23 09:46:31.22461-05', 'AC', FALSE, FALSE, TRUE);
+INSERT INTO Employee VALUES('AC002','saul@mail.com','pbkdf2_sha256$150000$OXNYAGopz2wm$L9VkR91l0dEbZgPVmUk2tUwK5CQelrakG9pdiSsq9Qg=','Saul', 'Dorantes', '2019-09-23 09:46:31.22461-05', 'AC', FALSE, FALSE, TRUE);
 INSERT INTO Employee VALUES('AV001','rodrigo@mail.com','pbkdf2_sha256$150000$OXNYAGopz2wm$L9VkR91l0dEbZgPVmUk2tUwK5CQelrakG9pdiSsq9Qg=','Rodrigo', 'Huerta', '2019-09-23 09:46:31.22461-05', 'AV', FALSE, FALSE, TRUE);
+INSERT INTO Employee VALUES('AV002','anahi@mail.com','pbkdf2_sha256$150000$OXNYAGopz2wm$L9VkR91l0dEbZgPVmUk2tUwK5CQelrakG9pdiSsq9Qg=','Anahi', 'Martinez', '2019-09-23 09:46:31.22461-05', 'AV', FALSE, FALSE, TRUE);
 -- Password: admin123
 INSERT INTO Employee VALUES('AAC01','margarita@mail.com','pbkdf2_sha256$150000$xwzLHlVLuCzf$fdbqPpA02u1sVusR90/nAhu/b7DQUWcLqDzBAMkwaKM=','Margarita', 'Prado', '2019-09-23 09:46:31.22461-05', 'AACOM', FALSE, TRUE, FALSE);
 INSERT INTO Employee VALUES('AAL01','alejandro@mail.com','pbkdf2_sha256$150000$xwzLHlVLuCzf$fdbqPpA02u1sVusR90/nAhu/b7DQUWcLqDzBAMkwaKM=','Alejandro', 'León', '2019-09-23 09:46:31.22461-05', 'AAALM', FALSE, TRUE, FALSE);
+
+INSERT INTO Client VALUES('CL001','Luis Perez','LUPE0201694','Calle Santa Fe #18', 'luis@mail.com', '442-210-1520');
+INSERT INTO Client VALUES('CL002','Andrea Montes','AN856985984','Calle Santa Fe #18', 'luis@mail.com', '442-210-1520');
 
 
 INSERT INTO NotiEmployee VALUES(1, NULL, 'SA001', 'SADMI');

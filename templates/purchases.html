@@ -40,28 +40,60 @@
 
     // ------------------------------------------------
         // Get table data
-        // async function getPurchasesData() {
-        //     const response = await fetch('/fetch_purchases/');
-        //     const data = await response.json();
-        //     return data.purchases;
-        // }
+        async function getPurchasesData(url) {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.sales;
+        }
+        
+        let data;
+        if(getUserType(user) == 0 || getUserType(user) == 1){
+            data = await getPurchasesData('http://127.0.0.1:8000/fetch_purchases/1/');
+        } else if(getUserType(user) == 2){
+            console.log(user)
+            data = await getPurchasesData(`http://127.0.0.1:8000/fetch_purchases/2/${user.emp_key}/`);
+        }
 
-        // const data = await getPurchasesData();
+        async function sendData(url){
+            const response = await fetch(url)
+            const data = await response.json()
+            return data;
+        }
 
-    
-    const testData = [{
-        id: 01,
-        product: 'PROD001',
-        amount: 13,
-        provider: 'PROVEEDOR01',
-        total: 534.2,
-        buyer: 'COMPRADOR001',
-        purchase_date: '03-10-19'
-    }]
+    // const testData = [{
+    //     id: 01,
+    //     product: 'PROD001',
+    //     amount: 13,
+    //     provider: 'PROVEEDOR01',
+    //     total: 534.2,
+    //     buyer: 'COMPRADOR001',
+    //     purchase_date: '03-10-19'
+    // }]
 
     // ------------------------------------------------
         // Show table data and specific options for that user type
-        document.body.innerHTML += factoryTableViewPurchases(user, testData);
+        document.body.innerHTML += factoryTableViewPurchases(user, data);
+
+        const DELETEBUTTONS = document.querySelectorAll('#delete');
+
+        for(let deleteButton of DELETEBUTTONS){
+            deleteButton.addEventListener('click', async(e) => {
+                e.preventDefault();
+                
+                const purchaseKey = deleteButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
+                try{
+                    const data = await sendData(`http://127.0.0.1:8000/delete_purchase/${purchaseKey}/`);
+                    if (data.status === 200){
+                        // alert('Se elimino el registro')
+                        deleteButton.parentElement.parentElement.remove();
+                    } else {
+                        alert('Algo salio mal')
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+            })
+        }
 
     })();
 

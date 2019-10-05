@@ -40,13 +40,19 @@
 
     // ------------------------------------------------
         // Get table data
-        // async function getSalesData() {
-        //     const response = await fetch('/fetch_sales/');
-        //     const data = await response.json();
-        //     return data.sales;
-        // }
-
-        // const data = await getSalesData();
+        async function getSalesData(url) {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.sales;
+        }
+        
+        let data;
+        if(getUserType(user) == 0 || getUserType(user) == 1){
+            data = await getSalesData('http://127.0.0.1:8000/fetch_sales/1/');
+        } else if(getUserType(user) == 2){
+            console.log(user)
+            data = await getSalesData(`http://127.0.0.1:8000/fetch_sales/2/${user.emp_key}/`);
+        }
 
     testData = [{
         id: 1,
@@ -58,9 +64,38 @@
         sale_date: '03-10-19'
     }]
 
+        async function sendData(url){
+            const response = await fetch(url)
+            const data = await response.json()
+            return data;
+        }
+
     // ------------------------------------------------
         // Show table data and specific options for that user type
-        document.body.innerHTML += factoryTableViewSales(user, testData);
+        document.body.innerHTML += factoryTableViewSales(user, data);
+
+        const DELETEBUTTONS = document.querySelectorAll('#delete');
+
+        for(let deleteButton of DELETEBUTTONS){
+            deleteButton.addEventListener('click', async(e) => {
+                e.preventDefault();
+                
+                const saleKey = deleteButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
+                console.log(saleKey)
+                try{
+                    const data = await sendData(`http://127.0.0.1:8000/delete_sale/${saleKey}/`);
+                    console.log(data);
+                    if (data.status === 200){
+                        // alert('Se elimino el registro')
+                        deleteButton.parentElement.parentElement.remove();
+                    } else {
+                        alert('Algo salio mal')
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+            })
+        }
 
     })();
 

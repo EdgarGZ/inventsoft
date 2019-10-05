@@ -3,7 +3,7 @@ function getProductsEmployeeData(data){
     for(element of data){
         this.rows += `
         <tr>
-            <th scope="row">${element.product_key}</th>
+            <th scope="row">${element.key}</th>
             <td>${element.name}</td>
             <td>${element.description}</td>
             <td>${element.price}</td>
@@ -19,7 +19,7 @@ function getProductsAdminData(data){
     for(element of data){
         this.rows += `
         <tr>
-            <th scope="row">${element.product_key}</th>
+            <th scope="row">${element.key}</th>
             <td class="table-actions">
                 <a href="/form/form-products/" class="edit-row">
                     <i class="fas fa-pen"></i>
