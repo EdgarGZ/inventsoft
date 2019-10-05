@@ -1,6 +1,3 @@
-from django.db import models
-
-# Create your models here.
 """
 -- DOMAINS
 Create domain AreaCode as Varchar(5);
@@ -153,26 +150,6 @@ CREATE TABLE NotiEmployee (
 -- FOREIGN KEYS Notification
 Alter table NotiEmployee add foreign key (last_notification) references Notification (notification_key) on update cascade on delete cascade;
 Alter table NotiEmployee add foreign key (employee) references Employee (emp_key) on update cascade on delete cascade;
-
-
--- STORED PROCEDURE
-CREATE OR REPLACE FUNCTION addProduct(name VARCHAR(75), description VARCHAR(75), price DECIMAL(10,2), category CategoryKey, provider ProviderKey, amount_prod numeric(10)) RETURNS BOOLEAN AS 
-$$    
-  DECLARE
-    id_product ProductKey;
-	id_stock decimal(10);
-  BEGIN
-    SELECT generate_product_id() INTO id_product;
-    INSERT INTO Product VALUES(id_product, name, description, price, category, provider);
-    IF found THEN
-		SELECT MAX(id) + 1 FROM Stock INTO id_stock;
-        INSERT INTO Stock(id, product, amount) VALUES(id_stock, id_product, amount_prod);
-        RETURN found;  
-    ELSE
-        RETURN found;
-    END IF;
-  END;
-$$ LANGUAGE 'plpgsql';
 
 
 """
