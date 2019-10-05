@@ -35,11 +35,6 @@ function ViewNav(user){
             
             this.template += `
 
-            <a href="/records/" class="option">
-                <i class="far fa-clock"></i>
-                <span>Historial</span>
-            </a>
-
             <a href="/notifications/" class="option">
                 <i class="fas fa-bell"></i>
                 <span>Notificaciones</span>

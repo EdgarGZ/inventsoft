@@ -506,15 +506,6 @@ def staff(request):
     """
     return render(request, 'staff.html')
 
-
-@login_required
-def records(request):
-    """
-        Records function retrieves the records html
-    """
-    return render(request, 'records.html')
-
-
 @login_required
 def notifications(request):
     """

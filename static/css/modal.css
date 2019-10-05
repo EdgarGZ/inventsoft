@@ -30,7 +30,8 @@
 .modal-div{
     background-color: #fff;
     box-sizing: border-box;
-    padding: 1em 2em;
+    padding: 1.5em 2em;
+    padding-bottom: 1em;
     border-radius: 10px;
     box-shadow: 0 0 7px 5px rgba(0,0,0,.2);
 }
@@ -45,6 +46,15 @@
     font-size: 3em;
     color: #F378B9;
 }
+
+    .modal-options button{
+        transition: .2s all;
+    }
+
+    .modal-options button:hover {
+        width: 95%;
+        transition: .2s all;
+    }
 
 
 /*--------- Notificación ---------- */
@@ -75,5 +85,9 @@
     color: #fff;
     font-weight: 600;
     font-size: 1em;
+}
+
+.modal-options .secondary-btn{
+    width: 100%;
 }
 

@@ -40,13 +40,6 @@ function ViewDashboard(user){
                     
                     this.template += `
                         <div class="col-lg-3 col-12 col-sm-4 dashboard-option">
-                            <a href="/records/">    
-                                <i class="far fa-clock"></i>
-                                <span>Historial</span>
-                            </a>
-                        </div>
-
-                        <div class="col-lg-3 col-12 col-sm-4 dashboard-option">
                             <a href="/notifications/">
                                 <i class="fas fa-bell"></i>
                                 <span>Notificaciones</span>

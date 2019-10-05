@@ -1,3 +1,7 @@
+function navigate(url){
+    window.location.assign(url);
+}
+
 function changeClass(styleClass, HTMLElement){
     document.getElementById(HTMLElement).classList.toggle(styleClass);
 }
@@ -35,6 +39,20 @@ function showModal(text, icon, location){
     }
 }
 
-function navigate(url){
-    window.location.assign(url);
+
+function showOptionModal(text){
+    document.body.innerHTML += `
+        <div class="modal-back" id="modal-options">
+            <div class="modal-container">
+                <div class="modal-div">
+                    <h3>${text}</h3>
+                    <div class="modal-options">
+                        <button id="ok" class="btn primary-btn">Aceptar</button>
+                        <button id="cancel" class="btn secondary-btn">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `; 
+    changeClass('modal-back-show', 'modal-options');
 }

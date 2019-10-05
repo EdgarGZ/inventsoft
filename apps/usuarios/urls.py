@@ -14,7 +14,6 @@ from apps.usuarios.views import purchases
 from apps.usuarios.views import products
 from apps.usuarios.views import fetch_products
 from apps.usuarios.views import staff
-from apps.usuarios.views import records
 from apps.usuarios.views import notifications
 from apps.usuarios.views import form
 from apps.usuarios.views import fetch_categories_and_providers
@@ -54,7 +53,6 @@ urlpatterns = [
     path('products/', products, name='products'),
     path('fetch_products/', fetch_products, name='get_products'),
     path('staff/', staff, name='staff'),
-    path('records/', records, name='records'),
     path('notifications/', notifications, name='notifications'),
     path('categories_and_providers/', fetch_categories_and_providers, name='fetch_categories_and_providers'),
     path('post_product/', post_product, name='post_product'),

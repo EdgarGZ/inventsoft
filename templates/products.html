@@ -58,6 +58,15 @@
         // Show table data and specific options for that user type
         document.body.innerHTML += factoryTableViewProducts(user, data);
 
+    document.getElementById('cancel').addEventListener('click', function(){
+        // alert('cancel');
+        changeClass('modal-back-show', 'modal-options');
+    });
+    document.getElementById('ok').addEventListener('click', function(){
+        // alert('ok');
+        changeClass('modal-back-show', 'modal-options');
+    });
+
         const DELETEBUTTONS = document.querySelectorAll('#delete');
 
         for(let deleteButton of DELETEBUTTONS){
