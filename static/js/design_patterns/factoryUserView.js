@@ -23,4 +23,13 @@ function FormViewFactory(){
     }
 }
 
-// ** FORM DE PRODUCTOS Y EMPLEADOS (admin area y super admin)
+function FormDataFactory(){
+    this.create = async (type, user) =>{
+        if(type === '/form-sales/') return FormSalesData(user);
+        if(type === '/form-purchases/') return FormPurchasesData(user);
+        if(type === '/form-stock/') return FormStockData();
+        if(type === '/form-products/') return FormProductData();
+        if(type === '/form-staff/') return FormStaffData();
+        if(type === '/form-staff-admin/') return FormStaffAdminData();
+    }
+}

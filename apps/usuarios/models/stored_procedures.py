@@ -9,7 +9,7 @@ $$
     SELECT TO_CHAR(nextval('seq_autoid_prod'::regclass),'"PROD"fm0000') INTO id_producto;
     return id_producto;
   END;
-$$ LANGUAGE 'plpgsql'
+$$ LANGUAGE 'plpgsql';
 
 
 

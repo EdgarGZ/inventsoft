@@ -19,7 +19,6 @@ function ViewFormPurchases(){
                                     <input type="hidden" id='idProveedor'>
                                     <select name="" id="vendedor" placeholder="Vendedor">
                                     </select>
-
                                     <button type="submit" class="btn btn-submit">Guardar</button>
                                     <a class="btn secondary-btn">Cancelar</a>
                                 </form>

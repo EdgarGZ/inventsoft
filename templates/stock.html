@@ -48,14 +48,7 @@
         }
 
         const data = await getStockData();
-
-    // const testData = [{
-    //     id: 1,
-    //     product: 'PRODUCTO001',
-    //     amount: 13
-    // }]          
-            
-
+                
     // ------------------------------------------------
         // Show table data and specific options for that user type
         document.body.innerHTML += factoryTableViewStock(user, data);

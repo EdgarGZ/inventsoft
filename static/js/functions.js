@@ -89,7 +89,7 @@ const getUserType = (user) => {
 
 // ----------- Form Views ------------------
     
-//*** function getFormType()
+    //*** function getFormType()
     //Get Form type: products, stock, sales, purchases, staff, ...
     const getFormType = () =>{
         const url = window.location.href;
@@ -103,3 +103,39 @@ const getUserType = (user) => {
     const factoryFormView = (type) => { 
         return new FormViewFactory().create(type);
     }
+
+    //*** function factoryFormData()
+    //Create Form depending on the user area
+    const factoryFormData = async (type, user) => { 
+        const view = await new FormDataFactory().create(type, user);
+        return view.showDetails(user);
+    }
+
+    
+// ----------- Form Data ------------------
+    
+    //*** function setAttributes()
+    function setAttributes(element, attributes){
+        for(const attribute in attributes){
+            element.setAttribute(attribute, attributes[attribute])
+        }
+    }
+
+    //*** function mandarData()
+    // const CSRF_TOKEN = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+    async function mandarData(url, data){
+        const response = await fetch(url, {
+            method: 'POST',
+            body: data,
+            headers: {
+                'X-CSRFToken': document.getElementsByName('csrfmiddlewaretoken')[0].value
+            }
+        })
+        const resp = await response.json();
+        return resp;
+    }
+
+
+
+
+

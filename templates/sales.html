@@ -54,15 +54,15 @@
             data = await getSalesData(`http://127.0.0.1:8000/fetch_sales/2/${user.emp_key}/`);
         }
 
-    testData = [{
-        id: 1,
-        product: 'PRODUCTO001',
-        amount: 13,
-        client:'CLIENTE001',
-        total: 340,
-        seller:'VENDEDIR001',
-        sale_date: '03-10-19'
-    }]
+    // testData = [{
+    //     id: 1,
+    //     product: 'PRODUCTO001',
+    //     amount: 13,
+    //     client:'CLIENTE001',
+    //     total: 340,
+    //     seller:'VENDEDIR001',
+    //     sale_date: '03-10-19'
+    // }]
 
         async function sendData(url){
             const response = await fetch(url)
