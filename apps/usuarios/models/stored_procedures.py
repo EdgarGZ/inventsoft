@@ -69,7 +69,6 @@ $$
 	  id_sell decimal(10);
   BEGIN
     SELECT now() INTO sell_date;
-	  Select nextval(pg_get_serial_sequence('Sale', 'id')) INTO id_sell;
     amount_sale:= amount_product;
     INSERT INTO Sale VALUES(id_sell, id_product, amount_product, client, total, seller, sell_date);
     IF found THEN
@@ -152,29 +151,60 @@ $$
   END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE OR REPLACE FUNCTION addNewEployee(emp_key EmployeeKey, email VARCHAR(75), passwrd VARCHAR(128), first_name varchar(50), last_name varchar(50), date_joined timestamp, area AreaCode, is_superuser boolean, is_areaadmin boolean, is_simplemortal boolean) RETURNS BOOLEAN AS 
-$$   
+CREATE OR REPLACE FUNCTION addNewEployee(emp_key EmployeeKey, email VARCHAR(75), passwrd VARCHAR(128), first_name varchar(50), last_name varchar(50), area AreaCode, super boolean, areab boolean, simplem boolean) RETURNS BOOLEAN AS 
+$$
+  DECLARE
+	  date_join timestamp;     
   BEGIN
-    IF is_superuser THEN
-        INSERT INTO Employee VALUES(emp_key, email, passwrd, first_name, last_name, date_joined, area, TRUE, FALSE, FALSE);
+    SELECT now() INTO date_join;
+    IF super THEN
+        INSERT INTO Employee VALUES(emp_key, email, passwrd, first_name, last_name, date_join, area, TRUE, FALSE, FALSE);
         RETURN found;  
-    ELSIF is_areadmin THEN
+    ELSIF areab THEN
         IF area = 'AA' THEN
-            INSERT INTO Employee VALUES('AAA01', email, passwrd, first_name, last_name, date_joined, area, FALSE, TRUE, FALSE);
+            INSERT INTO Employee VALUES('AAA01', email, passwrd, first_name, last_name, date_join, area, FALSE, TRUE, FALSE);
             RETURN found;
         ELSIF area = 'AC' THEN
-            INSERT INTO Employee VALUES('AAC01', email, passwrd, first_name, last_name, date_joined, area, FALSE, TRUE, FALSE);
+            INSERT INTO Employee VALUES('AAC01', email, passwrd, first_name, last_name, date_join, area, FALSE, TRUE, FALSE);
             RETURN found;
         ELSE
-            INSERT INTO Employee VALUES('AAV01', email, passwrd, first_name, last_name, date_joined, area, FALSE, TRUE, FALSE);
+            INSERT INTO Employee VALUES('AAV01', email, passwrd, first_name, last_name, date_join, area, FALSE, TRUE, FALSE);
             RETURN found;
         END IF;
     ELSE
-        INSERT INTO Employee VALUES(emp_key, email, passwrd, first_name, last_name, date_joined, area, FALSE, FALSE, TRUE);
+        INSERT INTO Employee VALUES(emp_key, email, passwrd, first_name, last_name, date_join, area, FALSE, FALSE, TRUE);
         RETURN found;
     END IF;
   END;
 $$ LANGUAGE 'plpgsql';
 
+CREATE OR REPLACE FUNCTION deleteUser(id_user EmployeeKey) RETURNS BOOLEAN  AS
+$$
+   BEGIN
+    DELETE FROM Employee WHERE emp_key = id_user;
+    RETURN found;  
+   END;
+$$ LANGUAGE 'plpgsql';
+
+
+CREATE OR REPLACE FUNCTION insertNotif(id_not decimal(10), trans  varchar(5), receiver varchar(40), descrip varchar(128), area varchar(5)) RETURNS BOOLEAN  AS
+$$
+   BEGIN
+   INSERT INTO Notification VALUES(id_not, trans, receiver, descrip, area);
+    RETURN found;  
+   END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION addNewEployee(emp_key EmployeeKey, email VARCHAR(75), passwrd VARCHAR(128), first_name varchar(50), last_name varchar(50), area AreaCode, super boolean, areab boolean, simplem boolean) RETURNS BOOLEAN AS 
+
+CREATE OR REPLACE FUNCTION editStaff(id_staff EmployeeKey, new_id EmployeeKey, new_name VARCHAR(50), new_ln VARCHAR(50), new_mail VARCHAR(75), new_area AreaCode) RETURNS BOOLEAN AS 
+$$    
+  BEGIN
+    UPDATE Employee  
+    SET emp_key = new_id, email = new_mail, first_name = new_name, last_name = new_ln, area = new_area
+    WHERE emp_key = id_staff;  
+    RETURN found;
+  END;
+$$ LANGUAGE 'plpgsql';
 
 """

@@ -88,7 +88,6 @@ async function FormProductData() {
                 else {
                     alert('Llenar todos los campos');
                 }
-                alert("hola");
             });
         }
     };

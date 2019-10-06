@@ -41,6 +41,22 @@
         // Get dashboard specific options for that user type
         document.body.innerHTML += ViewDashboard(user);
 
+        async function getNotiData(url) {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+        }
+        
+        let data = await getNotiData('http://127.0.0.1:8000/fetch_notifications/');
+        console.log(document.getElementById('notificaciones'))
+        if(data.notifications.length > 0){
+            // document.getElementById('notificaciones').innerHTML+=`<i class="fas fa-circle">${data.notifications.length}</i>`;
+            document.getElementById('notificaciones').innerHTML+=`
+                <span class="fa-layers-counter" style="background:Tomato">${data.notifications.length}</span>
+            `;
+        }
+        
+
     })();
 
 </script>

@@ -29,7 +29,7 @@
 
 <script>
     (async function(){
-
+        localStorage.removeItem('staffKey');
     // ------------------------------------------------
         // Get user
         const user = await getSingleton();
@@ -40,29 +40,65 @@
 
     // ------------------------------------------------
         // Get table data
-        // async function getStaffData() {
-        //     const response = await fetch('/fetch_staff/');
-        //     const data = await response.json();
-        //     return data.staff;
-        // }
+        async function getStaffData() {
+            const response = await fetch(`/fetch_staff/${user.emp_key}/`);
+            const data = await response.json();
+            return data.staff;
+        }
 
-        // const data = await getStaffData();
+        const data = await getStaffData();
 
-        testData = [{
-            emp_key: 001,
-            email: 'correo@gmail.com',
-            first_name: 'María',
-            last_name: 'Pérez Rosales',
-            date_joined: '10-07-2019',
-            area: 'AA',
-            is_superuser: false,
-            is_areaadmin: false,
-            is_simplemortal: true
-        }]
+        // testData = [{
+        //     emp_key: 001,
+        //     email: 'correo@gmail.com',
+        //     first_name: 'María',
+        //     last_name: 'Pérez Rosales',
+        //     date_joined: '10-07-2019',
+        //     area: 'AA',
+        //     is_superuser: false,
+        //     is_areaadmin: false,
+        //     is_simplemortal: true
+        // }]
 
     // ------------------------------------------------
         // Show table data and specific options for that user type
-        document.body.innerHTML += factoryTableViewStaff(user, testData);
+        document.body.innerHTML += factoryTableViewStaff(user, data);
+
+        async function sendData(url){
+			const response = await fetch(url)
+			const data = await response.json()
+			return data;
+		}
+
+        const DELETEBUTTONS = document.querySelectorAll('#delete');
+
+        for(let deleteButton of DELETEBUTTONS){
+            deleteButton.addEventListener('click', async(e) => {
+                e.preventDefault();
+                
+                const staffKey = deleteButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
+
+                try{
+                    const data = await sendData(`http://127.0.0.1:8000/delete_staff/${staffKey}/`);
+                    if (data.status === 200){
+                        // alert('Se elimino el registro')
+                        deleteButton.parentElement.parentElement.remove();
+                    } else {
+                        alert('Algo salio mal')
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+            })
+        }
+
+        const EDITBUTTONS = document.querySelectorAll('.edit-row');
+        for(let editButton of EDITBUTTONS){
+            editButton.addEventListener('click', async(e) => {
+                const staffKey = editButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
+                localStorage.setItem('staffKey', staffKey);
+            })
+        }
 
     })();
 

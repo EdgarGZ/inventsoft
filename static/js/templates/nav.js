@@ -35,7 +35,7 @@ function ViewNav(user){
             
             this.template += `
 
-            <a href="/notifications/" class="option">
+            <a href="/notifications/" id="notificaciones" class="option">
                 <i class="fas fa-bell"></i>
                 <span>Notificaciones</span>
             </a>

@@ -94,10 +94,14 @@ def fetch_area_user(area_code=None, user_type=None, action=None, command=None):
             cursor.execute(query)
             if command.lower() == 'all':
                 query_list = cursor.fetchall()
+                column_names = [desc[0] for desc in cursor.description]
+                data = [column_names, list(query_list)]
             elif command.lower() == 'one':
                 query_list = cursor.fetchone()
-            column_names = [desc[0] for desc in cursor.description]
-            data = [column_names, list(query_list)]
+                staff_list = list(query_list)
+                column_names = [desc[0] for desc in cursor.description]
+                data = {column:staff_list[i] for i, column in enumerate(column_names)}
+            
             return data
         except Exception as e:
             return None

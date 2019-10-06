@@ -23,6 +23,14 @@ from apps.usuarios.authentication import authenticate, get_user, login
 from apps.usuarios.querys import execute_query, call_stored_procedure, call_view, fetch_area_user
 
 
+# Singleton
+from apps.usuarios.singleton import config, AdminArea
+
+
+# Observer
+from apps.usuarios.observer import ConcreteObserver
+
+
 # Views
 def render_login(request):
     """
@@ -143,7 +151,6 @@ def fetch_products(request):
         and sends them to the front in JSON format
     """
     data, products = {}, []
-
     resp = execute_query('SELECT product_key as key, name, description, price, category, provider FROM Product ORDER BY product_key ASC;', 'all')
     if resp:
         product_list = resp[1]
@@ -168,7 +175,7 @@ def post_product(request):
         cantidad = request.POST['cantidad']
         accion = request.POST['accion']
         if 'id' in request.POST:
-                idProduct = request.POST['id']
+            idProduct = request.POST['id']
         regex_precio = r'[0-9.]{,10}'
         regex_cantitdad = r'[0-9]{,10}'
         if not categoria in categorias or not proveedor in proveedores:
@@ -184,12 +191,12 @@ def post_product(request):
                 resp = call_stored_procedure(f'SELECT addProduct(\'{nombre}\', \'{descripcion}\', {float(precio)}, \'{categoria}\', \'{proveedor}\', {int(cantidad)})', 'one')
                 if resp[1]:
                     data['status'] = 200
+                    ConcreteObserver().update(transmitter=request.session['user']['emp_key'], receiver='ALL', description=f"Se agrego {nombre} al inventario!", area=request.session['user']['area'])
                     return JsonResponse(data)
                 else:
                     data['status'] = 400
                     return JsonResponse(data)
             elif accion == 'EDIT':
-                print(idProduct)
                 resp = call_stored_procedure(f'SELECT editProduct(\'{idProduct}\',\'{nombre}\', \'{descripcion}\', {float(precio)}, \'{categoria}\', \'{proveedor}\', {int(cantidad)})', 'one')
                 if resp[1]:
                     data['status'] = 200
@@ -381,9 +388,7 @@ def fetch_sales(request, flag, user=None):
             sales = [{column:row[i] for i, column in enumerate(column_names)} for row in sales_list]
             data['sales'] = sales
     elif int(flag) == 2:
-        print(user)
         resp = execute_query(f'SELECT Sale.id, Sale.product, Sale.amount, Sale.client, Sale.total, Sale.seller, DATE(Sale.sale_date) as sale_date, Product.name as name_product, Client.name as client_name, Employee.first_name, Employee.last_name  FROM Sale, Product, Client, Employee WHERE Sale.seller = \'{user}\' AND Product.product_key = Sale.product AND Client.client_key = Sale.client AND Employee.emp_key = Sale.seller;', 'all')
-        print(resp)
         if resp:
             sales_list = resp[1]
             column_names = resp[0]
@@ -506,6 +511,201 @@ def staff(request):
     """
     return render(request, 'staff.html')
 
+
+@login_required
+def fetch_staff(request, user):
+    data, staff = {}, []
+    
+    resp = execute_query(f'SELECT emp_key, email, first_name, last_name, DATE(date_joined) as date_joined, area, is_superuser, is_areaadmin, is_simplemortal FROM Employee WHERE NOT emp_key = \'{user}\';', 'all')
+    if resp:
+        staff_list = resp[1]
+        column_names = resp[0]
+        staff = [{column:row[i] for i, column in enumerate(column_names)} for row in staff_list]
+        data['staff'] = staff
+
+    return JsonResponse(data)
+
+
+@login_required
+def post_staff(request):
+    data = {}
+    areas = ['AA', 'AV', 'AC', 'SADMI']
+    tipos = ['employee', 'adminarea', 'superuser']
+    if request.method == 'POST':
+        nombre = request.POST['nombre']
+        apellidos = request.POST['apellidos']
+        correo = request.POST['correo']
+        contraseña = request.POST['contraseña']
+        area = request.POST['area']
+        tipo = request.POST['tipo']
+        accion = request.POST['accion']
+        print(request.POST)
+        if 'id' in request.POST:
+            idStaff = request.POST['id']
+        if not area in areas or not tipo in tipos:
+            data['status'] = 403
+            data['error_desc'] = 'Categoria o Proveedor incorrectos'
+            return JsonResponse(data)
+        else:
+            if accion == 'NEW':
+                user = {
+                    'email': correo,
+                    'pass': contraseña,
+                    'first_name': nombre,
+                    'last_name': apellidos,
+                }
+                if tipo == 'adminarea':
+                    config()
+                    if area == 'AA':
+                        resp = AdminArea().adminAlmacen(user)
+                        if resp == True:
+                            data['status'] = 200
+                        else:
+                            data['status'] = 400
+                    elif area == 'AC':
+                        resp = AdminArea().adminCompras(user)                    
+                        if resp == True:
+                            data['status'] = 200
+                        else:
+                            data['status'] = 400
+                    elif area == 'AV':
+                        resp = AdminArea().adminVentas(user)
+                        if resp == True:
+                            data['status'] = 200
+                        else:
+                            data['status'] = 400
+                else:
+                    emp_id = make_employee_id(area=area, user_type=tipo)
+                    if tipo == 'superuser':
+                        resp = call_stored_procedure(f"SELECT addNewEployee('{emp_id}',  '{user['email']}', '{user['pass']}', '{user['first_name']}', '{user['last_name']}', 'SADMI', TRUE, FALSE, FALSE)", 'one')
+                        print()
+                        if resp[1][0] == True:
+                            data['status'] = 200
+                        else:
+                            data['status'] = 400 
+                    else:
+                        resp = call_stored_procedure(f"SELECT addNewEployee('{emp_id}',  '{user['email']}', '{user['pass']}', '{user['first_name']}', '{user['last_name']}', '{area}', FALSE, FALSE, TRUE)", 'one')
+                        if resp[1][0] == True:
+                            data['status'] = 200
+                        else:
+                            data['status'] = 400 
+            elif accion == 'EDIT':
+                user = {
+                    'email': correo,
+                    'pass': contraseña,
+                    'first_name': nombre,
+                    'last_name': apellidos,
+                    'area': area,
+                }
+                temo = None
+                resp = execute_query(f"SELECT * FROM Employee WHERE emp_key = '{idStaff}'", 'one')
+                if resp:
+                    column_names = resp[0]
+                    user_list = resp[1]
+                    temp = {column:user_list[i] for i, column in enumerate(column_names)}
+                    temp['pass'] = temp['password']
+                if temp['email'] == user['email'] and temp['first_name'] == user['first_name'] and temp['last_name'] == user['last_name'] and temp['area'] == user['area']:
+                    data['status'] = 200
+                    data['info'] = '( ͡° ͜ʖ ͡°)'
+                else:
+                    emp_id = make_employee_id(area=user['area'], user_type=tipo)
+                    resp = call_stored_procedure(f"SELECT editStaff('{idStaff}', '{emp_id}', '{user['first_name']}', '{user['last_name']}', '{user['email']}', '{area}')", 'one')
+                    if resp[1][0] == True:
+                        data['status'] = 200
+                        data['info'] = 'Empleado actualizado <br> correctamente'
+                    else:
+                        data['status'] = 400
+
+            return JsonResponse(data)
+
+
+@login_required
+def get_staff_user(request, id):
+    data, user = {}, []
+    resp = execute_query(f"SELECT * FROM Employee WHERE emp_key = '{id}'", 'one')
+    if resp:
+        column_names = resp[0]
+        user_list = resp[1]
+        user = {column:user_list[i] for i, column in enumerate(column_names)}
+        data['user'] = user
+    
+    return JsonResponse(data)
+
+
+@login_required
+def delete_staff(request, id):
+    data = {}
+    resp = call_stored_procedure(f'SELECT deleteUser(\'{id}\')', 'one')
+    if resp[1]:
+        data['status'] = 200
+        return JsonResponse(data)
+    else:
+        data['status'] = 400
+        return JsonResponse(data)
+
+
+def make_employee_id(area, user_type, action='id', command='one'):
+    generated_id = None
+    if user_type == 'superuser':
+        emp_id = execute_query(f'SELECT * FROM Employee WHERE emp_key LIKE \'SA%\' ORDER BY emp_key DESC LIMIT 1;', 'one')
+        if emp_id == None:
+            generated_id = f'SA001'
+        else:
+            key = emp_id[1][0]
+            temp = str(int(key[-3:])+1)
+            if len(temp) == 1:
+                generated_id = f'SA00{int(key[-3:])+1}'
+            elif len(tmp) == 2:
+                generated_id = f'SA0{int(key[-3:])+1}'
+            elif len(temp) == 3:
+                generated_id = f'SA{int(key[-3:])+1}'
+    else:
+        if area == 'AA':
+            if user_type == 'employee':
+                emp_id = fetch_area_user(area_code=area, user_type=user_type, action='id', command='one')
+                if emp_id == None:
+                    generated_id = f'AA001'
+                else:
+                    key = emp_id['emp_key']
+                    temp = str(int(key[-3:])+1)
+                    if len(temp) == 1:
+                        generated_id = f'AA00{int(key[-3:])+1}'
+                    elif len(tmp) == 2:
+                        generated_id = f'AA0{int(key[-3:])+1}'
+                    elif len(temp) == 3:
+                        generated_id = f'AA{int(key[-3:])+1}'
+        elif area == 'AC':
+            if user_type == 'employee':
+                emp_id = fetch_area_user(area_code=area, user_type=user_type, action='id', command='one')
+                if emp_id == None:
+                    generated_id = f'AC001'
+                else:
+                    key = emp_id['emp_key']
+                    temp = str(int(key[-3:])+1)
+                    if len(temp) == 1:
+                        generated_id = f'AC00{int(key[-3:])+1}'
+                    elif len(temp) == 2:
+                        generated_id = f'AC0{int(key[-3:])+1}'
+                    elif len(temp) == 3:
+                        generated_id = f'AC{int(key[-3:])+1}'
+        elif area == 'AV':
+            if user_type == 'employee':
+                emp_id = fetch_area_user(area_code=area, user_type=user_type, action='id', command='one')
+                if emp_id == None:
+                    generated_id = f'AV001'
+                else:
+                    key = emp_id['emp_key']
+                    temp = str(int(key[-3:])+1)
+                    if len(temp) == 1:
+                        generated_id = f'AV00{int(key[-3:])+1}'
+                    elif len(temp) == 2:
+                        generated_id = f'AV0{int(key[-3:])+1}'
+                    elif len(temp) == 3:
+                        generated_id = f'AV{int(key[-3:])+1}'
+
+    return generated_id
+
+
 @login_required
 def notifications(request):
     """
@@ -514,34 +714,21 @@ def notifications(request):
     return render(request, 'notifications.html')
 
 
-
-    # if request.method == 'POST':
-    #     username = request.POST['username']
-    #     password = request.POST['password']
-    #     user = None
-
-    #     try:
-    #         tcp = threaded_postgreSQL_pool
-            # connection = tcp.getconn()
-            # cursor = connection.cursor()
-            # query = f'SELECT username, email FROM auth_user WHERE username = \'{username}\''
-            # cursor.execute_query(query)
-            # user = cursor.fetchone()
-            # column_names = [desc[0] for desc in cursor.description]
-            # user = [value for value in user]
-            # user = zip(column_names, user)
-            # user_object = dict(user)
-            # print(user_object)
-    #     except (Exception, psycopg2.DatabaseError) as error :
-    #         print ("Error while connecting to PostgreSQL", error)
-    #     finally:
-    #         if (tcp):
-    #             tcp.putconn(connection)
-    #             print("Threaded PostgreSQL connection pool is closed")
-
-    #     data = {
-    #         'response': user_object,
-    #         'status': 200
-    #     }
-    #     return JsonResponse(data)
-    #     return JsonResponse(data)
+@login_required
+def fetch_notifications(request):
+    data, notifications, resp = {}, [], None
+    if request.session['user']['is_superuser']:
+        resp = execute_query(f"SELECT * FROM Notification WHERE NOT transmitter = '{request.session['user']['emp_key']}'", 'all')
+    elif request.session['user']['is_areaadmin']:
+        resp = execute_query(f"SELECT * FROM Notification WHERE NOT transmitter = '{request.session['user']['emp_key']}' AND area = '{request.session['user']['emp_key'][1:3]}'", 'all')
+    elif request.session['user']['is_simplemortal']:
+        resp = execute_query(f"SELECT * FROM Notification WHERE NOT transmitter = '{request.session['user']['emp_key']}' AND area = '{request.session['user']['emp_key'][1:3]}' OR receiver = '{request.session['user']['area']}'", 'all')
+    # resp = execute_query(f"SELECT * FROM Notification WHERE receiver = 'ALL' OR ", 'all')
+    print(resp)
+    if resp:
+        column_names = resp[0]
+        notifications_list = resp[1]
+        notifications = [{column:row[i] for i, column in enumerate(column_names)} for row in notifications_list]
+        data['notifications'] = notifications
+    
+    return JsonResponse(data)

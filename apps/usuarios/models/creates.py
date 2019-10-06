@@ -129,9 +129,9 @@ Alter table Sale add foreign key (seller) references Employee (emp_key) on updat
 CREATE TABLE Notification (
     notification_key NotificationKey NOT NULL,
     transmitter EmployeeKey,
+    receiver varchar(40),
     description varchar(128),
     transmitter_area AreaCode,
-    notification_type decimal(2),
     primary key(notification_key)
 ) Without Oids;
 

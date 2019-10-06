@@ -34,6 +34,11 @@ from apps.usuarios.views import fetch_provider
 from apps.usuarios.views import buy_product
 from apps.usuarios.views import fetch_stock
 from apps.usuarios.views import edit_stock
+from apps.usuarios.views import fetch_staff
+from apps.usuarios.views import post_staff
+from apps.usuarios.views import get_staff_user
+from apps.usuarios.views import delete_staff
+from apps.usuarios.views import fetch_notifications
 
 # URLPatterns
 app_name='usuarios'
@@ -57,6 +62,7 @@ urlpatterns = [
     path('categories_and_providers/', fetch_categories_and_providers, name='fetch_categories_and_providers'),
     path('post_product/', post_product, name='post_product'),
     path('delete_product/<slug:id>/', delete_product, name='delete_product'),
+    path('delete_staff/<slug:id>/', delete_staff, name='delete_staff'),
     path('fetch_product/<slug:id>/', fetch_product, name='fetch_product'),
     path('fetch_product_stock/<slug:id>/', fetch_product_stock, name='fetch_product_stock'),
     path('fetch_provider/<slug:id>/', fetch_provider, name='fetch_provider'),
@@ -74,4 +80,8 @@ urlpatterns = [
     path('delete_purchase/<slug:id>/', delete_purchase, name='delete_purchase'),
     path('fetch_stock_product/<slug:id>/', fetch_stock_product, name='fetch_stock_product'),
     path('edit_stock/', edit_stock, name='edit_stock'),
+    path('fetch_staff/<slug:user>/', fetch_staff, name='fetch_staff'),
+    path('post_staff/', post_staff, name='post_staff'),
+    path('get_staff_user/<slug:id>/', get_staff_user, name='get_staff_user'),
+    path('fetch_notifications/', fetch_notifications, name='fetch_notifications'),
 ]

@@ -133,21 +133,18 @@ function ViewFormStaff(){
                     <div class="row row-form-container">
                         <div class="col-10 col-sm-8 col-lg-5 col-xl-4 col-form-container">
                             <div class="form-container">
-                                <form action="" class="form">
-                                    <input type="text" placeholder="Identificador:">
-                                    <input type="text" placeholder="Nombre:">
-                                    <input type="text" placeholder="Apellido(s):">
-                                    <input type="email" placeholder="Correo:" name="" id="">
-                                    <input type="password" placeholder="Contraseña:">
+                                <form id="formStaff" method="POST" action="." class="form">
+                                    <input type="text"id="nombre" placeholder="Nombre:">
+                                    <input type="text"id="apellidos" placeholder="Apellido(s):">
+                                    <input type="email" id="correo" placeholder="Correo:" name="" id="">
+                                    <input type="password" id="contraseña" placeholder="Contraseña:">
+                                    <select name="" id="area" placeholder="Area">
+                                    </select>
                                     <div class="type-user">
                                         <p>Tipo de usuario:</p>
                                         <div class="option-user">
-                                            <input type="radio" name="type-user" id="" value="employee">
+                                            <input type="radio" name="type-user" id="" value="employee" checked disabled>
                                             <span>Empleado</span>
-                                        </div>
-                                        <div class="option-user">
-                                            <input type="radio" name="type-user" id="" value="adminarea">
-                                            <span>Admin. de área</span>
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-submit">Guardar</button>
@@ -173,32 +170,33 @@ function ViewFormStaffAdmin(){
                     <div class="row row-form-container">
                         <div class="col-10 col-sm-8 col-lg-5 col-xl-4 col-form-container">
                             <div class="form-container">
-                                <form action="" class="form">
-                                    <input type="text" placeholder="Identificador:">
-                                    <input type="text" placeholder="Nombre:">
-                                    <input type="text" placeholder="Apellido(s):">
-                                    <input type="email" placeholder="Correo:" name="" id="">
-                                    <input type="password" placeholder="Contraseña:">
-                                    <select name="" id="" placeholder="Area">
-                                        <option value="">-- Area --</option>
+                                <form id="formStaff" method="POST" action="." class="form">
+                                    <input type="text" id="nombre" placeholder="Nombre:">
+                                    <input type="text" id="apellidos" placeholder="Apellido(s):">
+                                    <input type="email" placeholder="Correo:" name="" id="correo">
+                                    <input type="password" id="contraseña" placeholder="Contraseña:">
+                                    <select name="" id="area" placeholder="Area">
+                                        <option value="AA">Almacen</option>
+                                        <option value="AV">Ventas</option>
+                                        <option value="AC">Compras</option>
                                     </select>
-                                    <div class="type-user">
+                                    <div id="quitar" class="type-user">
                                         <p>Tipo de usuario:</p>
                                         <div class="option-user">
-                                            <input type="radio" name="type-user" id="" value="employee">
+                                            <input type="radio" name="type-user" id="r1" value="employee">
                                             <span>Empleado</span>
                                         </div>
                                         <div class="option-user">
-                                            <input type="radio" name="type-user" id="" value="adminarea">
+                                            <input type="radio" name="type-user" id="r2" value="adminarea">
                                             <span>Admin. de área</span>
                                         </div>
                                         <div class="option-user">
-                                            <input type="radio" name="type-user" id="" value="superuser">
+                                            <input type="radio" name="type-user" id="r3" value="superuser">
                                             <span>Súper usuario</span>
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-submit">Guardar</button>
-                                    <a href="" class="btn secondary-btn">Cancelar</a>
+                                    <a href="/staff/" class="btn secondary-btn">Cancelar</a>
                                 </form>
                             </div>
                         </div>
