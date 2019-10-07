@@ -38,44 +38,14 @@
         document.body.innerHTML += ViewNav(user);
 
     // ------------------------------------------------
+        // Show notitification count in nav-bar
+        showNotificationCount();
+        addNotification();
+
+    // ------------------------------------------------
         // Get dashboard specific options for that user type
         document.body.innerHTML += ViewDashboard(user);
 
-        async function getNotiData(url) {
-            const response = await fetch(url);
-            const data = await response.json();
-            return data;
-        }
-        
-        let notif = await getNotiData('http://127.0.0.1:8000/fetch_notifications/');
-        console.log(document.getElementById('notificaciones'))
-        console.log(notif.notifications)
-        if(notif.notifications.length > 0){
-            // document.getElementById('notificaciones').innerHTML+=`<i class="fas fa-circle">${data.notifications.length}</i>`;
-            document.getElementById('notificaciones').innerHTML+=`
-                <span class="notification-count">${notif.notifications.length}</span>
-            `;
-        }
-        
-        notif_nav = document.getElementById('notificaciones');
-        
-        notif_nav.addEventListener('click', async (e) => {
-            last_notif = notif.notifications.find(x => x.notification_key === notif.notifications[0].notification_key);
-            console.log(last_notif.notification_key)
-
-            async function sendData(){
-                const response = await fetch(`http://127.0.0.1:8000/read_all_notifications/${last_notif.notification_key}/`)
-                const data = await response.json()
-                return data;
-            }
-
-            try{
-                const data = await sendData();
-                console.log(data)
-            } catch (error) {
-                console.log(error)
-            }
-        })
 
     })();
 

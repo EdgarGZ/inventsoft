@@ -37,31 +37,20 @@
         document.body.innerHTML += ViewNav(user);
 
     // ------------------------------------------------
-        // Get notification template
-        document.body.innerHTML += ViewNotifications();
+        // Show notitification count in nav-bar
+        showNotificationCount();
 
-        async function getNotiData(url) {
-            const response = await fetch(url);
-            const data = await response.json();
-            return data;
-        }
-        
-        let notif = await getNotiData('http://127.0.0.1:8000/fetch_notifications/');
-        
-        if(notif.notifications.length > 0){
-            // document.getElementById('notificaciones').innerHTML+=`<i class="fas fa-circle">${data.notifications.length}</i>`;
-            document.getElementById('notificaciones').innerHTML+=`
-                <span class="notification-count">${notif.notifications.length}</span>
-            `;
-        }
+    // ------------------------------------------------
+        // Get notification template
+        const notif =  await getNotiData('http://127.0.0.1:8000/fetch_notifications/');
+        document.body.innerHTML += ViewNotifications(notif.notifications);
+
 
         notif_nav = document.getElementById('notificaciones');
         
-        notif_nav.addEventListener('click', async (e) => {
-            e.preventDefault();
-            last_notif = notif.notifications.find(x => x.notification_key === notif.notifications[0].notification_key);
-            alert(last_notif.notification_key)
+        last_notif = notif.notifications.find(x => x.notification_key === notif.notifications[0].notification_key);
 
+        if(last_notif){
             async function sendData(){
                 const response = await fetch(`http://127.0.0.1:8000/read_all_notifications/${last_notif.notification_key}/`)
                 const data = await response.json()
@@ -74,8 +63,7 @@
             } catch (error) {
                 console.log(error)
             }
-        })
-
+        }
 
     })();
 

@@ -75,7 +75,7 @@ async function FormProductData() {
                                 showModal('Producto actualizado <br> correctamente', 'fas fa-check-circle', '/products/');
                             }
                             else {
-                                showModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times',);
+                                showModal('Producto registrado <br> exitosamente', 'fas fa-check-circle', '/products/');
                             }
                         }
                         else {

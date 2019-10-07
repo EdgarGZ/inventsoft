@@ -5,7 +5,6 @@ async function sendData(url){
 }
 
 
-
 // *** async function getUserData();
 // Get user data from server side
 async function getUserData() {
@@ -144,6 +143,46 @@ const getUserType = (user) => {
     }
 
 
+// ----------- Notifications ------------------
+    
+    //*** function getNotiData()
+    // Get Notification Data
+    async function getNotiData(url) {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data;
+    }
 
+    //*** function showNotificationCount()
+    // Display notification count in nav-bar 
+    async function showNotificationCount(){
+        let notif = await getNotiData('http://127.0.0.1:8000/fetch_notifications/');
+        if(notif.notifications.length > 0){
+            document.getElementById('notificaciones').innerHTML+=`
+                <span class="notification-count">${notif.notifications.length}</span>
+            `;
+        }
+    }
 
+    //*** function sendData()
+    // Send notification data to server
+    async function sendData(last_notif){
+        const response = await fetch(`http://127.0.0.1:8000/read_all_notifications/${last_notif.notification_key}/`)
+        const data = await response.json()
+        return data;
+    }
 
+    //*** function addNotification()
+    // Display notification count in nav-bar 
+    async function addNotification(){
+        notif_nav = document.getElementById('notificaciones');    
+        last_notif = notif.notifications.find(x => x.notification_key === notif.notifications[0].notification_key);
+
+        if(last_notif){
+            try{
+                const data = await sendData(last_notif);
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
