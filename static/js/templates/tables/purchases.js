@@ -9,8 +9,8 @@ function ViewEmployeePurchasesTable(data){
                     </div>
                     <div class="result-options-container">
                         <button class="result-option main-option btn" onclick="navigate('/form/form-purchases/')">Nuevo registro</button>
-                        <button class="result-option other-option btn secondary-btn">Crear reporte</button>
-                        <button class="result-option other-option btn secondary-btn">Descargar CSV</button>
+                        <button class="result-option other-option btn secondary-btn" onclick="getPDF('table', 'compras')">Crear reporte</button>
+                        <button id="csv" class="result-option other-option btn secondary-btn">Descargar CSV</button>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-container" id="table">
@@ -46,8 +46,8 @@ function ViewAdminPurchasesTable(data){
                     </div>
                     <div class="result-options-container">
                         <button class="result-option main-option btn" onclick="navigate('/form/form-purchases/')">Nuevo registro</button>
-                        <button class="result-option other-option btn secondary-btn">Crear reporte</button>
-                        <button class="result-option other-option btn secondary-btn">Descargar CSV</button>
+                        <button class="result-option other-option btn secondary-btn" onclick="getPDF('table', 'compras')">Crear reporte</button>
+                        <button id="csv" class="result-option other-option btn secondary-btn">Descargar CSV</button>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-container" id="table">

@@ -1,3 +1,11 @@
+async function sendData(url){
+    const response = await fetch(url)
+    const data = await response.json()
+    return data;
+}
+
+
+
 // *** async function getUserData();
 // Get user data from server side
 async function getUserData() {

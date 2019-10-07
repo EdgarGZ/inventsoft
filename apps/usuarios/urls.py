@@ -39,6 +39,8 @@ from apps.usuarios.views import post_staff
 from apps.usuarios.views import get_staff_user
 from apps.usuarios.views import delete_staff
 from apps.usuarios.views import fetch_notifications
+from apps.usuarios.views import read_all_notifications
+from apps.usuarios.views import csv_save_to_disk
 
 # URLPatterns
 app_name='usuarios'
@@ -84,4 +86,6 @@ urlpatterns = [
     path('post_staff/', post_staff, name='post_staff'),
     path('get_staff_user/<slug:id>/', get_staff_user, name='get_staff_user'),
     path('fetch_notifications/', fetch_notifications, name='fetch_notifications'),
+    path('read_all_notifications/<slug:id>/', read_all_notifications, name='read_all_notifications'),
+    path('csv_save_to_disk/<slug:type_csv>/', csv_save_to_disk, name='csv_save_to_disk'),
 ]

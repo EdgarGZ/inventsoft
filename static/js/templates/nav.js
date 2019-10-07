@@ -3,7 +3,7 @@ function ViewNav(user){
         <nav class="nav">
             <label>&copy Inventsoft</label>
             <div class="active-user-container">
-                <p>Bienvenid@, 
+                <p>Bienvenido, 
                     <button id="active-user" onclick="changeClass('nav-logout-show', 'nav-logout')">
                         ${user.first_name} ${user.last_name}
                     </button>

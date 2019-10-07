@@ -21,7 +21,7 @@ async function FormStaffData() {
                 document.getElementById("contraseña").style.display = 'none';
                 document.getElementById("contraseña").value = privateStaffStorage.password
                 document.getElementById("area").value = privateStaffStorage.area;
-                document.getElementById('quitar').style.display = 'none';
+                // document.getElementById('quitar').style.display = 'none';
                 if(privateStaffStorage.is_superuser === true){
                     document.getElementById('r3').checked = true;
                 } else if(privateStaffStorage.is_areaadmin === true){
@@ -80,7 +80,7 @@ async function FormStaffData() {
                     }
 
                 } else {
-                    alert('Llenar todos los campos')
+                    showModal('Llena todos los <br> campos', 'fas fa-times',);
                 }
             })
         }

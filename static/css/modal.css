@@ -30,8 +30,7 @@
 .modal-div{
     background-color: #fff;
     box-sizing: border-box;
-    padding: 1.5em 2em;
-    padding-bottom: 1em;
+    padding: 1.5em 3em;
     border-radius: 10px;
     box-shadow: 0 0 7px 5px rgba(0,0,0,.2);
 }

@@ -75,18 +75,18 @@ async function FormProductData() {
                                 showModal('Producto actualizado <br> correctamente', 'fas fa-check-circle', '/products/');
                             }
                             else {
-                                showModal('Producto registrado <br> correctamente', 'fas fa-check-circle', '/products/');
+                                showModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times',);
                             }
                         }
                         else {
-                            showModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times');
+                            showModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times',);
                         }
                     }
                     catch (error) {
                     }
                 }
                 else {
-                    alert('Llenar todos los campos');
+                    showModal('Llena todos los <br> campos', 'fas fa-times',);
                 }
             });
         }

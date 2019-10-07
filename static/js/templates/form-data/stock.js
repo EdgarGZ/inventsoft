@@ -42,7 +42,7 @@ async function FormStockData() {
                     }
 
                 } else {
-                    alert('Llenar todos los campos')
+                    showModal('Llena todos los <br> campos', 'fas fa-times',);
                 }
             })
 

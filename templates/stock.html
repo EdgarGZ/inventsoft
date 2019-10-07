@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Sarabun:200,300,400,700,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -29,6 +32,9 @@
 
 <script>
     (async function(){
+        
+        document.body.innerHTML += includeModal();
+
         localStorage.removeItem('stockKey');
 
     // ------------------------------------------------
@@ -47,8 +53,7 @@
             return data.stock;
         }
 
-        const data = await getStockData();
-                
+        const data = await getStockData();              
     // ------------------------------------------------
         // Show table data and specific options for that user type
         document.body.innerHTML += factoryTableViewStock(user, data);
@@ -61,6 +66,47 @@
                 localStorage.setItem('stockKey', stockKey);
             })
         }
+
+        async function getNotiData(url) {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+        }
+        
+        let notif = await getNotiData('http://127.0.0.1:8000/fetch_notifications/');
+        console.log(document.getElementById('notificaciones'))
+        if(notif.notifications.length > 0){
+            // document.getElementById('notificaciones').innerHTML+=`<i class="fas fa-circle">${data.notifications.length}</i>`;
+            document.getElementById('notificaciones').innerHTML+=`
+                <span class="notification-count">${notif.notifications.length}</span>
+            `;
+        }
+
+        notif_nav = document.getElementById('notificaciones');
+        
+        notif_nav.addEventListener('click', async (e) => {
+            last_notif = notif.notifications.find(x => x.notification_key === notif.notifications[0].notification_key);
+            console.log(last_notif.notification_key)
+
+            async function sendData(){
+                const response = await fetch(`http://127.0.0.1:8000/read_all_notifications/${last_notif.notification_key}/`)
+                const data = await response.json()
+                return data;
+            }
+
+            try{
+                const data = await sendData();
+                console.log(data)
+                // if (data.status === 200){
+                //     // alert('Se elimino el registro')
+                //     deleteButton.parentElement.parentElement.remove();
+                // } else {
+                //     alert('Algo salio mal')
+                // }
+            } catch (error) {
+                console.log(error)
+            }
+        })
 
     })();
 

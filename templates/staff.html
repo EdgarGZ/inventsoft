@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Sarabun:200,300,400,700,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -29,6 +32,9 @@
 
 <script>
     (async function(){
+        document.body.innerHTML += showOptionModal('¿Eliminar registro?');
+        document.body.innerHTML += includeModal();
+
         localStorage.removeItem('staffKey');
     // ------------------------------------------------
         // Get user
@@ -48,18 +54,6 @@
 
         const data = await getStaffData();
 
-        // testData = [{
-        //     emp_key: 001,
-        //     email: 'correo@gmail.com',
-        //     first_name: 'María',
-        //     last_name: 'Pérez Rosales',
-        //     date_joined: '10-07-2019',
-        //     area: 'AA',
-        //     is_superuser: false,
-        //     is_areaadmin: false,
-        //     is_simplemortal: true
-        // }]
-
     // ------------------------------------------------
         // Show table data and specific options for that user type
         document.body.innerHTML += factoryTableViewStaff(user, data);
@@ -76,18 +70,27 @@
             deleteButton.addEventListener('click', async(e) => {
                 e.preventDefault();
                 
-                const staffKey = deleteButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
+                changeClass('modal-back-show', 'modal-options');
+                
+                document.getElementById('ok').onclick = async function(){
 
-                try{
-                    const data = await sendData(`http://127.0.0.1:8000/delete_staff/${staffKey}/`);
-                    if (data.status === 200){
-                        // alert('Se elimino el registro')
-                        deleteButton.parentElement.parentElement.remove();
-                    } else {
-                        alert('Algo salio mal')
+                    changeClass('modal-back-show', 'modal-options');
+                    
+                    const staffKey = deleteButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
+
+                    try{
+                        const data = await sendData(`http://127.0.0.1:8000/delete_staff/${staffKey}/`);
+                        if (data.status === 200){
+                            // alert('Se elimino el registro')
+                            deleteButton.parentElement.parentElement.remove();
+                            showSuccessModal('Registro eliminado <br> exitosamente', 'fas fa-check-circle');
+                        } else {
+                            // alert('Algo salio mal')
+                            showSuccessModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times');
+                        }
+                    } catch (error) {
+                        console.log(error)
                     }
-                } catch (error) {
-                    console.log(error)
                 }
             })
         }
@@ -99,6 +102,43 @@
                 localStorage.setItem('staffKey', staffKey);
             })
         }
+
+        async function getNotiData(url) {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+        }
+        
+        let notif = await getNotiData('http://127.0.0.1:8000/fetch_notifications/');
+        console.log(document.getElementById('notificaciones'))
+        
+        if(notif.notifications.length > 0){
+            // document.getElementById('notificaciones').innerHTML+=`<i class="fas fa-circle">${data.notifications.length}</i>`;
+            document.getElementById('notificaciones').innerHTML+=`
+                <span class="notification-count">${notif.notifications.length}</span>
+            `;
+        }
+
+        notif_nav = document.getElementById('notificaciones');
+        
+        notif_nav.addEventListener('click', async (e) => {
+            last_notif = notif.notifications.find(x => x.notification_key === notif.notifications[0].notification_key);
+            console.log(last_notif.notification_key)
+
+            async function sendData(){
+                const response = await fetch(`http://127.0.0.1:8000/read_all_notifications/${last_notif.notification_key}/`)
+                const data = await response.json()
+                return data;
+            }
+
+            try{
+                const data = await sendData();
+                console.log(data)
+
+            } catch (error) {
+                console.log(error)
+            }
+        })
 
     })();
 

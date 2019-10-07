@@ -140,7 +140,7 @@ function ViewFormStaff(){
                                     <input type="password" id="contraseña" placeholder="Contraseña:">
                                     <select name="" id="area" placeholder="Area">
                                     </select>
-                                    <div class="type-user">
+                                    <div id="quitar" class="type-user">
                                         <p>Tipo de usuario:</p>
                                         <div class="option-user">
                                             <input type="radio" name="type-user" id="" value="employee" checked disabled>

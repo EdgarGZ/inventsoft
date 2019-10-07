@@ -9,8 +9,7 @@ function ViewEmployeeStockTable(data){
                         <h2>Registros - Almacén</h2>
                     </div>
                     <div class="result-options-container">
-                        <button class="result-option other-option btn secondary-btn">Crear reporte</button>
-                        <button class="result-option other-option btn secondary-btn">Descargar CSV</button>
+                        <button class="result-option other-option btn secondary-btn" onclick="getPDF('table', 'almacen')">Crear reporte</button>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-container" id="table">
@@ -31,7 +30,6 @@ function ViewEmployeeStockTable(data){
     `;
 }
 
-//<button class="result-option main-option btn" onclick="navigate('/form/form-stock/')">Nuevo registro</button>
 function ViewAdminStockTable(data){
     this.template = `
         <div class="container-fluid main-container" id="main-container">
@@ -42,8 +40,7 @@ function ViewAdminStockTable(data){
                         <h2>Registros - Almacén</h2>
                     </div>
                     <div class="result-options-container">
-                        <button class="result-option other-option btn secondary-btn">Crear reporte</button>
-                        <button class="result-option other-option btn secondary-btn">Descargar CSV</button>
+                        <button class="result-option other-option btn secondary-btn" onclick="getPDF('table', 'almacen')">Crear reporte</button>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-container" id="table">

@@ -61,14 +61,15 @@ $$ LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION sellProduct(id_product ProductKey, amount_product numeric(10), client ClientKey, total numeric(12,2), seller EmployeeKey) RETURNS BOOLEAN AS 
 $$    
-  DECLARE
+   DECLARE
     sell_date timestamp; 
     amount_sale decimal(10);
     current_amount decimal(10);
     new_amount decimal(10);
-	  id_sell decimal(10);
+	id_sell decimal(10);
   BEGIN
     SELECT now() INTO sell_date;
+	Select nextval(pg_get_serial_sequence('Sale', 'id')) INTO id_sell;
     amount_sale:= amount_product;
     INSERT INTO Sale VALUES(id_sell, id_product, amount_product, client, total, seller, sell_date);
     IF found THEN
@@ -83,6 +84,7 @@ $$
     END IF;
   END;
 $$ LANGUAGE 'plpgsql';
+
 
 CREATE OR REPLACE FUNCTION deleteSale(id_sale decimal(10)) RETURNS BOOLEAN  AS
 $$
@@ -195,8 +197,6 @@ $$
    END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE OR REPLACE FUNCTION addNewEployee(emp_key EmployeeKey, email VARCHAR(75), passwrd VARCHAR(128), first_name varchar(50), last_name varchar(50), area AreaCode, super boolean, areab boolean, simplem boolean) RETURNS BOOLEAN AS 
-
 CREATE OR REPLACE FUNCTION editStaff(id_staff EmployeeKey, new_id EmployeeKey, new_name VARCHAR(50), new_ln VARCHAR(50), new_mail VARCHAR(75), new_area AreaCode) RETURNS BOOLEAN AS 
 $$    
   BEGIN
@@ -204,6 +204,24 @@ $$
     SET emp_key = new_id, email = new_mail, first_name = new_name, last_name = new_ln, area = new_area
     WHERE emp_key = id_staff;  
     RETURN found;
+  END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION addNotiEmployee(id decimal(10), noti_id decimal(10), emp_key EmployeeKey, area AreaCode) RETURNS BOOLEAN AS 
+$$   
+  BEGIN
+    INSERT INTO NotiEmployee VALUES(id, noti_id, emp_key, area);
+    RETURN found;  
+  END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION updateNotiEmployee(noti_id decimal(10), emp_key EmployeeKey) RETURNS BOOLEAN AS 
+$$   
+  BEGIN
+ 	UPDATE NotiEmployee  
+    SET last_notification = noti_id, employee = emp_key
+    WHERE employee = emp_key; 
+    RETURN found;  
   END;
 $$ LANGUAGE 'plpgsql';
 

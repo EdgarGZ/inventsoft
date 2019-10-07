@@ -109,20 +109,21 @@ async function FormSalesData(user) {
                     form.append('total', document.getElementById('total').value);
                     form.append('client', document.getElementById('cliente').value);
                     form.append('employee', document.getElementById('vendedor').value);
+                    
                     try {
                         const data = await mandarData('http://127.0.0.1:8000/sell_product/', form);
                         if (data.status === 200) {
                             showModal('Venta registrada <br> correctamente', 'fas fa-check-circle', '/sales/');
                         }
                         else {
-                            showModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times');
+                            showModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-check-times',);
                         }
                     }
                     catch (error) {
                     }
                 }
                 else {
-                    alert('Llenar todos los campos');
+                    showModal('Llena todos los <br> campos', 'fas fa-times',);
                 }
             });
         }

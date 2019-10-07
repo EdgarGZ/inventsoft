@@ -3,18 +3,30 @@ function getStaffAdminAreaData(data){
     for(element of data){
         this.rows += `
             <tr>
-                <th scope="row">${element.emp_key}</th>
+                <th scope="row">${element.emp_key}</th>`
+
+                if(!element.is_simplemortal){
+                this.rows += `
                 <td class="table-actions">
-                    <a href="/form/form-staff/" class="edit-row">
+                    <button id='delete'>
+                            <i class="fas fa-trash"></i>
+                            <span>Borrar</span>
+                        </button>
+                    </td>`
+                } else {
+                this.rows += `
+                <td class="table-actions">
+                    <a href="/form/form-staff-admin/" class="edit-row">
                         <i class="fas fa-pen"></i>
                         <span>Editar</span>
                     </a>
-                    <a href="">
+                    <button id='delete'>
                         <i class="fas fa-trash"></i>
                         <span>Borrar</span>
-                    </a>
-                </td>
-                <td>${element.email}</td>
+                    </button>
+                </td>`
+                }
+                this.rows += `<td>${element.email}</td>
                 <td>${element.first_name}</td>
                 <td>${element.last_name}</td>
                 <td>${element.date_joined}</td>
@@ -41,14 +53,14 @@ function getStaffSuperAdminData(data){
                 } else {
                 this.rows += `
                 <td class="table-actions">
-                <button id='delete'>
-                        <i class="fas fa-trash"></i>
-                        <span>Borrar</span>
-                    </button>
                     <a href="/form/form-staff-admin/" class="edit-row">
                         <i class="fas fa-pen"></i>
                         <span>Editar</span>
-                </a>
+                    </a>
+                    <button id='delete'>
+                        <i class="fas fa-trash"></i>
+                        <span>Borrar</span>
+                    </button>
                 </td>`
                 }
                 this.rows += `<td>${element.email}</td>

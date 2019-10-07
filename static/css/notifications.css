@@ -4,6 +4,17 @@
     margin-bottom: -1em;
 }
 
+    #zero-notif{
+        background-color: rgba(0,0,0,.03);
+        border: 1px solid rgba(0,0,0,.1);
+        font-weight: 300;
+        border-radius: 10px;
+        width: 100%;
+        text-align: center;
+        padding: 1em;
+    }
+
+
 .record{
     margin-bottom: 2em;
     border-radius: 20px;
@@ -66,3 +77,5 @@
         .content p{
             margin: 0;
         }
+
+    

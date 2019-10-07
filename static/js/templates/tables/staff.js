@@ -9,8 +9,7 @@ function ViewAdminAreaStaffTable(data){
                     </div>
                     <div class="result-options-container">
                         <button class="result-option main-option btn" onclick="navigate('/form/form-staff/')">Nuevo registro</button>
-                        <button class="result-option other-option btn secondary-btn">Crear reporte</button>
-                        <button class="result-option other-option btn secondary-btn">Descargar CSV</button>
+                        <button class="result-option other-option btn secondary-btn" onclick="getPDF('table', 'personal')">Crear reporte</button>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-container" id="table">
@@ -45,8 +44,7 @@ function ViewSuperAdminStaffTable(data){
                     </div>
                     <div class="result-options-container">
                         <button class="result-option main-option btn" onclick="navigate('/form/form-staff-admin/')">Nuevo registro</button>
-                        <button class="result-option other-option btn secondary-btn">Crear reporte</button>
-                        <button class="result-option other-option btn secondary-btn">Descargar CSV</button>
+                        <button class="result-option other-option btn secondary-btn" onclick="getPDF('table', 'personal')">Crear reporte</button>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-container" id="table">

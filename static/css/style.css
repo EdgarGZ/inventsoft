@@ -196,10 +196,21 @@ a:hover{
 }
 
 
+.notification-count{
+    padding: 2px 8px;
+    float: right;
+    background-color: #FA709A;
+    border-radius: 20px;
+    font-size: .8em;
+    margin-left: 5px;
+    color: #fff !important;
+}
+
 /* Media queries para responsividad parantalla para celulares */
 @media (max-width:450px){
     .nav{
         padding: 0 5px;
     }
 }
+
 

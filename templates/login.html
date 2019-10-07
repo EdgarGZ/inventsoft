@@ -71,7 +71,7 @@
             try {
                 const data = await mandarData(URL, form);
                 if(data.status === 200){
-                    showModal('Ingreso exitoso', 'fas fa-check-circle', '/dashboard/');          
+                    showModal('Ingreso exitoso', 'fas fa-check-circle', '/dashboard/');
                 } else {
                     document.getElementById('error').innerHTML = `<p>Usuario o contraseña inválidos</p>`;
                 }

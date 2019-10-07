@@ -10,6 +10,8 @@ from apps.usuarios.decorators import login_required
 # Utilities
 import psycopg2
 import re
+import os
+import csv
 
 
 # Conections
@@ -359,7 +361,6 @@ def edit_stock(request):
             return JsonResponse(data)
         else:
             resp = call_stored_procedure(f'SELECT editStock(\'{producto}\', {int(cantidad)})', 'one')
-            print(resp)
             if resp[1]:
                 data['status'] = 200
                 return JsonResponse(data)
@@ -457,13 +458,11 @@ def buy_product(request):
         regex_precio = r'[0-9.]{,10}'
         regex_cantitdad = r'[0-9]{,10}'
         if not re.match(regex_precio, total) or not re.match(regex_cantitdad, amount):
-            print('no')
             data['status'] = 400
             data['error_desc'] = 'Cantidad o Precio invalido'
             return JsonResponse(data)
         else:
             resp = call_stored_procedure(f'SELECT purchaseProduct(\'{product}\', {int(amount)}, \'{provider}\', {float(total)}, \'{employee}\');', 'one')
-            print(resp)            
             if resp[1]:
                 data['status'] = 200
                 return JsonResponse(data)
@@ -539,7 +538,6 @@ def post_staff(request):
         area = request.POST['area']
         tipo = request.POST['tipo']
         accion = request.POST['accion']
-        print(request.POST)
         if 'id' in request.POST:
             idStaff = request.POST['id']
         if not area in areas or not tipo in tipos:
@@ -578,7 +576,6 @@ def post_staff(request):
                     emp_id = make_employee_id(area=area, user_type=tipo)
                     if tipo == 'superuser':
                         resp = call_stored_procedure(f"SELECT addNewEployee('{emp_id}',  '{user['email']}', '{user['pass']}', '{user['first_name']}', '{user['last_name']}', 'SADMI', TRUE, FALSE, FALSE)", 'one')
-                        print()
                         if resp[1][0] == True:
                             data['status'] = 200
                         else:
@@ -718,17 +715,109 @@ def notifications(request):
 def fetch_notifications(request):
     data, notifications, resp = {}, [], None
     if request.session['user']['is_superuser']:
-        resp = execute_query(f"SELECT * FROM Notification WHERE NOT transmitter = '{request.session['user']['emp_key']}'", 'all')
+        resp = execute_query(f"SELECT * FROM Notification WHERE NOT transmitter = '{request.session['user']['emp_key']}' ORDER BY notification_key DESC", 'all')
     elif request.session['user']['is_areaadmin']:
-        resp = execute_query(f"SELECT * FROM Notification WHERE NOT transmitter = '{request.session['user']['emp_key']}' AND area = '{request.session['user']['emp_key'][1:3]}'", 'all')
+        resp = execute_query(f"SELECT * FROM Notification WHERE NOT transmitter = '{request.session['user']['emp_key']}' AND (transmitter_area = '{request.session['user']['emp_key'][1:3]}' OR receiver = 'ALL') ORDER BY notification_key DESC", 'all')
     elif request.session['user']['is_simplemortal']:
-        resp = execute_query(f"SELECT * FROM Notification WHERE NOT transmitter = '{request.session['user']['emp_key']}' AND area = '{request.session['user']['emp_key'][1:3]}' OR receiver = '{request.session['user']['area']}'", 'all')
+        resp = execute_query(f"SELECT * FROM Notification WHERE NOT transmitter = '{request.session['user']['emp_key']}' AND (transmitter_area = '{request.session['user']['area']}' OR receiver = 'ALL') ORDER BY notification_key DESC", 'all')
     # resp = execute_query(f"SELECT * FROM Notification WHERE receiver = 'ALL' OR ", 'all')
-    print(resp)
+    lastnotemp = execute_query(f"SELECT last_notification FROM NotiEmployee WHERE employee = '{request.session['user']['emp_key']}';", 'one')
     if resp:
         column_names = resp[0]
         notifications_list = resp[1]
-        notifications = [{column:row[i] for i, column in enumerate(column_names)} for row in notifications_list]
+        if lastnotemp != None:
+            notifications = [{column:row[i] for i, column in enumerate(column_names)} for row in notifications_list if int(row[0]) > int(str(lastnotemp[1][0]))]
+        else:
+            notifications = [{column:row[i] for i, column in enumerate(column_names)} for row in notifications_list]
         data['notifications'] = notifications
-    
     return JsonResponse(data)
+
+
+@login_required
+def read_all_notifications(request, id):
+    data = {}
+    lastnotemp = execute_query(f"SELECT id FROM NotiEmployee WHERE employee = '{request.session['user']['emp_key']}';", 'one')
+    if lastnotemp == None:
+        notemp = execute_query(f"SELECT id FROM NotiEmployee ORDER BY id DESC LIMIT 1;", 'one')
+        if notemp == None:
+            notemp = 1
+        else:
+            notemp = notemp[1][0]
+            notemp = int(notemp)+1
+        lastnotemp = call_stored_procedure(f"SELECT addNotiEmployee({notemp}, '{id}', '{request.session['user']['emp_key']}', '{request.session['user']['area']}');", 'one')
+        if lastnotemp[1]:
+            data['status'] = 200
+            print('primera vez')
+            return JsonResponse(data)
+        else:
+            data['status'] = 400
+            return JsonResponse(data)
+    else:
+        resp = call_stored_procedure(f"SELECT updateNotiEmployee({id}, '{request.session['user']['emp_key']}');", 'one')
+        if resp[1]:
+            data['status'] = 200
+            print('update')
+            return JsonResponse(data)
+        else:
+            data['status'] = 400
+            return JsonResponse(data)
+
+
+def get_download_path():
+    """Returns the default downloads path for linux or windows"""
+    if os.name == 'nt':
+        import winreg
+        sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
+        downloads_guid = '{374DE290-123F-4565-9164-39C4925E467B}'
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, sub_key) as key:
+            location = winreg.QueryValueEx(key, downloads_guid)[0]
+        return location
+    else:
+        return os.path.join(os.path.expanduser('~'), 'downloads')
+
+
+@login_required
+def csv_save_to_disk(request, type_csv):
+        data, aux_name, rows, columns_names = {}, None, None, None
+        if type_csv == 'SALES':
+            aux_name = f"SALES-{request.session['user']['emp_key']}"
+            if request.session['user']['is_superuser'] or request.session['user']['is_areaadmin']:
+                resp = execute_query('SELECT Sale.id, Sale.product, Sale.amount, Sale.client, Sale.total, Sale.seller, DATE(Sale.sale_date) as sale_date FROM Sale, Product WHERE Sale.product = Product.product_key;', 'all')
+                if resp:
+                    rows = resp[1]
+                    column_names = resp[0]
+            else:
+                resp = execute_query(f"SELECT id, product, amount, client, total, seller, DATE(sale_date) as sale_date FROM Sale, Product WHERE Sale.seller = '{request.session['user']['emp_key']}' AND Sale.product = Product.product_key;;", 'all')
+                if resp:
+                    rows = resp[1]
+                    column_names = resp[0]
+            rowstmp = [{column:row[i] for i, column in enumerate(column_names)} for row in rows]
+
+            rows = rowstmp
+            columns_names = column_names
+        else:
+            aux_name = f"PURCHASES-{request.session['user']['emp_key']}"
+            if request.session['user']['is_superuser'] or request.session['user']['is_areaadmin']:
+                resp = execute_query('SELECT Purchase.id, Purchase.product, Purchase.amount, Purchase.provider, Purchase.total, Purchase.buyer, DATE(Purchase.purchase_date) as purchase_date FROM Purchase, Product WHERE Purchase.product = Product.product_key;', 'all')
+                if resp:
+                    rows = resp[1]
+                    column_names = resp[0]
+            else:
+                resp = execute_query(f"SELECT id, product, amount, provider, total, buyer, DATE(purchase_date) as purchase_date FROM Purchase, Product WHERE Purchase.buyer = '{request.session['user']['emp_key']}' AND Purchase.product = Product.product_key;", 'all')
+                if resp:
+                    rows = resp[1]
+                    column_names = resp[0]
+            rowstmp = [{column:row[i] for i, column in enumerate(column_names)} for row in rows]
+
+            rows = rowstmp
+            columns_names = column_names
+        down_folder = get_download_path()
+        table_name = down_folder + '\\' + aux_name + '.csv'
+        with open(table_name, mode='w') as f:
+            writer = csv.DictWriter(f, fieldnames=columns_names)
+            writer.writeheader()
+            writer.writerows(rows)
+            f.close()
+            data['status'] = 200
+        
+        return JsonResponse(data)

@@ -124,7 +124,7 @@ async function FormPurchasesData(user) {
                             showModal('Compra registrada <br> correctamente', 'fas fa-check-circle', '/purchases/');
                         }
                         else {
-                            showModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times');
+                            showModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times',);
                         }
                     }
                     catch (error) {
@@ -132,7 +132,7 @@ async function FormPurchasesData(user) {
                     }
                 }
                 else {
-                    alert('Llenar todos los campos');
+                    showModal('Llena todos los <br>campos', 'fas fa-times',);
                 }
             });
         }
