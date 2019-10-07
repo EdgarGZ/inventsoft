@@ -39,31 +39,12 @@
     // ------------------------------------------------
         // Show notitification count in nav-bar
         showNotificationCount();
+        addNotification();
 
     // ------------------------------------------------
         // Get notification template
         const notif =  await getNotiData('http://127.0.0.1:8000/fetch_notifications/');
         document.body.innerHTML += ViewNotifications(notif.notifications);
-
-
-        notif_nav = document.getElementById('notificaciones');
-        
-        last_notif = notif.notifications.find(x => x.notification_key === notif.notifications[0].notification_key);
-
-        if(last_notif){
-            async function sendData(){
-                const response = await fetch(`http://127.0.0.1:8000/read_all_notifications/${last_notif.notification_key}/`)
-                const data = await response.json()
-                return data;
-            }
-
-            try{
-                const data = await sendData();
-
-            } catch (error) {
-                console.log(error)
-            }
-        }
 
     })();
 

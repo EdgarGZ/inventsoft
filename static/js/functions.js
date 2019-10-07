@@ -175,6 +175,7 @@ const getUserType = (user) => {
     //*** function addNotification()
     // Display notification count in nav-bar 
     async function addNotification(){
+        let notif = await getNotiData('http://127.0.0.1:8000/fetch_notifications/');
         notif_nav = document.getElementById('notificaciones');    
         last_notif = notif.notifications.find(x => x.notification_key === notif.notifications[0].notification_key);
 
