@@ -32,7 +32,8 @@
 
 <script>
     (async function(){
-        
+     
+    // Include HTML modals
         document.body.innerHTML += showOptionModal('¿Eliminar registro?');
         document.body.innerHTML += includeModal();
 
@@ -50,88 +51,23 @@
     
     // ------------------------------------------------
         // Get table data
-        async function getSalesData(url) {
-            const response = await fetch(url);
-            const data = await response.json();
-            return data.sales;
-        }
-        
         let data;
         if(getUserType(user) == 0 || getUserType(user) == 1){
-            console.log('si')
-            data = await getSalesData('http://127.0.0.1:8000/fetch_sales/1/');
+            data = await getData('http://127.0.0.1:8000/fetch_sales/1/');
         } else if(getUserType(user) == 2){
-            console.log(user)
-            console.log('ni')
-            data = await getSalesData(`http://127.0.0.1:8000/fetch_sales/2/${user.emp_key}/`);
+            data = await getData(`http://127.0.0.1:8000/fetch_sales/2/${user.emp_key}/`);
         }
-
-        // async function sendData(url){
-        //     const response = await fetch(url)
-        //     const data = await response.json()
-        //     return data;
-        // }
 
     // ------------------------------------------------
         // Show table data and specific options for that user type
-        document.body.innerHTML += factoryTableViewSales(user, data);
-
-        const DELETEBUTTONS = document.querySelectorAll('#delete');
-
-        for(let deleteButton of DELETEBUTTONS){
-            deleteButton.addEventListener('click', async(e) => {
-                e.preventDefault();
-
-                changeClass('modal-back-show', 'modal-options');
-                
-                document.getElementById('ok').onclick = async function(){
-
-                    changeClass('modal-back-show', 'modal-options');
-                
-                    const saleKey = deleteButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
-                    console.log(saleKey)
-                    try{
-                        const data = await sendData(`http://127.0.0.1:8000/delete_sale/${saleKey}/`);
-                        console.log(data);
-                        if (data.status === 200){
-                            deleteButton.parentElement.parentElement.remove();
-                            showSuccessModal('Registro eliminado <br> exitosamente', 'fas fa-check-circle');
-                        } else {
-                            showSuccessModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times');
-                        }
-                    } catch (error) {
-                        console.log(error)
-                    }
-                }
-            })
-        }
-
-
+        document.body.innerHTML += factoryTableViewSales(user, data.sales);
+        
+        // Delete buttons functionality
+        addDeleteOptions();
 
     // -----------------------------
         // Get CSV
-        sales_csv = document.getElementById('csv');
-        sales_csv.addEventListener('click', async (e) => {
-            e.preventDefault()
-            async function sendData(){
-                const response = await fetch(`http://127.0.0.1:8000/csv_save_to_disk/SALES/`)
-                const data = await response.json()
-                return data;
-            }
-
-            try{
-                const data = await sendData();
-                console.log(data)
-                if (data.status === 200){
-                    showSuccessModal('Descarga completada.<br> Ir a descargas', 'fas fa-check-circle');
-                } else {
-                    showSuccessModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times');
-                }
-            } catch (error) {
-                console.log(error)
-            }
-
-        })
+        getCSV(`http://127.0.0.1:8000/csv_save_to_disk/SALES/`);
 
     })();
 

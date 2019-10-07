@@ -32,10 +32,14 @@
 
 <script>
     (async function(){
+    
+    // Include HTML modals
         document.body.innerHTML += showOptionModal('¿Eliminar registro?');
         document.body.innerHTML += includeModal();
 
+    // Remove staffKey from localStorage
         localStorage.removeItem('staffKey');
+
     // ------------------------------------------------
         // Get user
         const user = await getSingleton();
@@ -50,62 +54,17 @@
 
     // ------------------------------------------------
         // Get table data
-        async function getStaffData() {
-            const response = await fetch(`/fetch_staff/${user.emp_key}/`);
-            const data = await response.json();
-            return data.staff;
-        }
-
-        const data = await getStaffData();
+        const data = await getData(`/fetch_staff/${user.emp_key}/`);
 
     // ------------------------------------------------
         // Show table data and specific options for that user type
-        document.body.innerHTML += factoryTableViewStaff(user, data);
-
-        async function sendData(url){
-			const response = await fetch(url)
-			const data = await response.json()
-			return data;
-		}
-
-        const DELETEBUTTONS = document.querySelectorAll('#delete');
-
-        for(let deleteButton of DELETEBUTTONS){
-            deleteButton.addEventListener('click', async(e) => {
-                e.preventDefault();
-                
-                changeClass('modal-back-show', 'modal-options');
-                
-                document.getElementById('ok').onclick = async function(){
-
-                    changeClass('modal-back-show', 'modal-options');
-                    
-                    const staffKey = deleteButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
-
-                    try{
-                        const data = await sendData(`http://127.0.0.1:8000/delete_staff/${staffKey}/`);
-                        if (data.status === 200){
-                            // alert('Se elimino el registro')
-                            deleteButton.parentElement.parentElement.remove();
-                            showSuccessModal('Registro eliminado <br> exitosamente', 'fas fa-check-circle');
-                        } else {
-                            // alert('Algo salio mal')
-                            showSuccessModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times');
-                        }
-                    } catch (error) {
-                        console.log(error)
-                    }
-                }
-            })
-        }
-
-        const EDITBUTTONS = document.querySelectorAll('.edit-row');
-        for(let editButton of EDITBUTTONS){
-            editButton.addEventListener('click', async(e) => {
-                const staffKey = editButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
-                localStorage.setItem('staffKey', staffKey);
-            })
-        }
+        document.body.innerHTML += factoryTableViewStaff(user, data.staff);
+        
+        // Delete buttons functionality
+        addDeleteOptions();
+        
+        // Edit buttons functionality
+        addEditOptions('staffKey');
 
     })();
 

@@ -33,10 +33,13 @@
 <script>
     (async function(){
 
+    // Include HTML modals
         document.body.innerHTML += showOptionModal('¿Eliminar registro?');
         document.body.innerHTML += includeModal();
 
+    // Remove productKey from localStorage
         localStorage.removeItem('productKey');
+        
     // ------------------------------------------------
         // Get user
         const user = await getSingleton();
@@ -51,58 +54,17 @@
 
     // ------------------------------------------------
         // Get table data
-        async function getProductsData() {
-            const response = await fetch('/fetch_products/');
-            const data = await response.json();
-            return data.products;
-        }
-
-        const data = await getProductsData();
-
+        const data = await getData('/fetch_products/');
         
     // ------------------------------------------------
         // Show table data and specific options for that user type
-        document.body.innerHTML += factoryTableViewProducts(user, data);
-
-        const DELETEBUTTONS = document.querySelectorAll('#delete');
-
-        for(let deleteButton of DELETEBUTTONS){
-            deleteButton.addEventListener('click', async(e) => {
-                e.preventDefault();
-                
-                changeClass('modal-back-show', 'modal-options');
-                
-                document.getElementById('ok').onclick = async function(){
-
-                    changeClass('modal-back-show', 'modal-options');
-                    
-                    const productKey = deleteButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
-                    
-                    try{
-                        const data = await sendData(`http://127.0.0.1:8000/delete_product/${productKey}/`);
-                        if (data.status === 200){
-                            deleteButton.parentElement.parentElement.remove();
-                            showSuccessModal('Registro eliminado <br> exitosamente', 'fas fa-check-circle');
-                        } else {
-                            showSuccessModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times');
-                            
-                        }
-                    } catch (error) {
-                        console.log(error)
-                    }
-                }
-            })
-        }
-
-        const EDITBUTTONS = document.querySelectorAll('.edit-row');
-        for(let editButton of EDITBUTTONS){
-            editButton.addEventListener('click', async(e) => {
-                const productKey = editButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
-                console.log(productKey)
-                localStorage.setItem('productKey', productKey);
-            })
-        }
-
+        document.body.innerHTML += factoryTableViewProducts(user, data.products);
+        
+        // Delete buttons functionality
+        addDeleteOptions();
+        
+        // Edit buttons functionality
+        addEditOptions('productKey');
 
     })();
 

@@ -41,23 +41,13 @@
     </div>
 </body>
 <script src="{% static 'js/design_patterns/singletonUser.js' %}"></script>
+<script src="{% static 'js/functions.js' %}"></script>
 <script src="{% static 'js/styleFunctions.js' %}"></script>
 <script>
     const FORMLOGIN = document.getElementById('formLogin');
     const URL = 'http://127.0.0.1:8000/login/';
     const CSRF_TOKEN = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 
-    async function mandarData(url, data){
-        const response = await fetch(url, {
-            method: 'POST',
-            body: data,
-            headers: {
-                'X-CSRFToken': CSRF_TOKEN
-            }
-        })
-        const resp = await response.json();
-        return resp;
-    }
 
     FORMLOGIN.addEventListener('submit', async (e) => {
         e.preventDefault();
