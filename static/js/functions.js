@@ -1,9 +1,10 @@
+// *** async function sendData();
+// Send form data to server
 async function sendData(url){
     const response = await fetch(url)
     const data = await response.json()
     return data;
 }
-
 
 // *** async function getUserData();
 // Get user data from server side
@@ -164,14 +165,6 @@ const getUserType = (user) => {
         }
     }
 
-    //*** function sendData()
-    // Send notification data to server
-    async function sendData(last_notif){
-        const response = await fetch(`http://127.0.0.1:8000/read_all_notifications/${last_notif.notification_key}/`)
-        const data = await response.json()
-        return data;
-    }
-
     //*** function addNotification()
     // Display notification count in nav-bar 
     async function addNotification(){
@@ -181,9 +174,31 @@ const getUserType = (user) => {
 
         if(last_notif){
             try{
-                const data = await sendData(last_notif);
+                const data = await sendData(`http://127.0.0.1:8000/read_all_notifications/${last_notif.notification_key}/`);
             } catch (error) {
                 console.log(error)
             }
         }
     }
+
+// *** getCSV() 
+// Get CSV file (Comma Separated Value) -> Excel
+async function getCSV(urlData){
+    sales_csv = document.getElementById('csv');
+    sales_csv.addEventListener('click', async (e) => {
+        e.preventDefault()
+
+        try{
+            const data = await sendData(urlData);
+            console.log(data)
+            if (data.status === 200){
+                showSuccessModal('Descarga completada.<br> Ir a descargas', 'fas fa-check-circle');
+            } else {
+                showSuccessModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times');
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
+    })
+}

@@ -66,11 +66,6 @@
             data = await getSalesData(`http://127.0.0.1:8000/fetch_sales/2/${user.emp_key}/`);
         }
 
-        // async function sendData(url){
-        //     const response = await fetch(url)
-        //     const data = await response.json()
-        //     return data;
-        // }
 
     // ------------------------------------------------
         // Show table data and specific options for that user type
@@ -110,28 +105,7 @@
 
     // -----------------------------
         // Get CSV
-        sales_csv = document.getElementById('csv');
-        sales_csv.addEventListener('click', async (e) => {
-            e.preventDefault()
-            async function sendData(){
-                const response = await fetch(`http://127.0.0.1:8000/csv_save_to_disk/SALES/`)
-                const data = await response.json()
-                return data;
-            }
-
-            try{
-                const data = await sendData();
-                console.log(data)
-                if (data.status === 200){
-                    showSuccessModal('Descarga completada.<br> Ir a descargas', 'fas fa-check-circle');
-                } else {
-                    showSuccessModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times');
-                }
-            } catch (error) {
-                console.log(error)
-            }
-
-        })
+        getCSV(`http://127.0.0.1:8000/csv_save_to_disk/SALES/`);
 
     })();
 
