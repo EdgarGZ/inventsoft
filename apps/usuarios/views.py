@@ -1,7 +1,7 @@
 # Django
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-
+from django.contrib.auth.hashers import make_password
 
 # Decorators
 from apps.usuarios.decorators import login_required
@@ -535,6 +535,7 @@ def post_staff(request):
         apellidos = request.POST['apellidos']
         correo = request.POST['correo']
         contraseña = request.POST['contraseña']
+        ciph_contra = make_password(contraseña)
         area = request.POST['area']
         tipo = request.POST['tipo']
         accion = request.POST['accion']
@@ -548,7 +549,7 @@ def post_staff(request):
             if accion == 'NEW':
                 user = {
                     'email': correo,
-                    'pass': contraseña,
+                    'pass': ciph_contra,
                     'first_name': nombre,
                     'last_name': apellidos,
                 }

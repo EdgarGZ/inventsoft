@@ -6,6 +6,7 @@ async function sendData(url){
     return data;
 }
 
+<<<<<<< HEAD
 // *** async function getData();
 // Get data from server side
 async function getData(url) {
@@ -14,6 +15,8 @@ async function getData(url) {
     return data;
 }
 
+=======
+>>>>>>> master
 // *** async function getUserData();
 // Get user data from server side
 async function getUserData() {
@@ -254,5 +257,9 @@ async function getCSV(urlData){
         }
 
     })
+<<<<<<< HEAD
 }
 
+=======
+}
+>>>>>>> master
