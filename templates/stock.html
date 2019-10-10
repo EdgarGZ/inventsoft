@@ -32,11 +32,9 @@
 
 <script>
     (async function(){
-    
-    // Include HTML modals
+        
         document.body.innerHTML += includeModal();
 
-    // Remove stockKey from localStorage
         localStorage.removeItem('stockKey');
 
     // ------------------------------------------------
@@ -53,14 +51,25 @@
 
     // ------------------------------------------------
         // Get table data
-        const data = await getData('/fetch_stock/');              
+        async function getStockData() {
+            const response = await fetch('/fetch_stock/');
+            const data = await response.json();
+            return data.stock;
+        }
 
+        const data = await getStockData();              
     // ------------------------------------------------
         // Show table data and specific options for that user type
-        document.body.innerHTML += factoryTableViewStock(user, data.stock);
+        document.body.innerHTML += factoryTableViewStock(user, data);
 
-        // Edit buttons functionality
-        addEditOptions('stockKey');
+        const EDITBUTTONS = document.querySelectorAll('.edit-row');
+        for(let editButton of EDITBUTTONS){
+            editButton.addEventListener('click', async(e) => {
+                const stockKey = editButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
+                console.log(stockKey)
+                localStorage.setItem('stockKey', stockKey);
+            })
+        }
 
     })();
 

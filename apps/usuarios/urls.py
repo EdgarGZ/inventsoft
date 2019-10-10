@@ -42,6 +42,8 @@ from apps.usuarios.views import fetch_notifications
 from apps.usuarios.views import read_all_notifications
 from apps.usuarios.views import csv_save_to_disk
 
+from apps.usuarios.views import fetch_area_adminarea
+
 # URLPatterns
 app_name='usuarios'
 urlpatterns = [
@@ -88,4 +90,5 @@ urlpatterns = [
     path('fetch_notifications/', fetch_notifications, name='fetch_notifications'),
     path('read_all_notifications/<slug:id>/', read_all_notifications, name='read_all_notifications'),
     path('csv_save_to_disk/<slug:type_csv>/', csv_save_to_disk, name='csv_save_to_disk'),
+    path('fetch_area_adminarea/', fetch_area_adminarea, name='fetch_area_adminarea'),
 ]

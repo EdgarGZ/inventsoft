@@ -1,7 +1,7 @@
 // Get form-staff data
-async function FormStaffData() {
+async function FormStaffData(user) {
     this.template = {
-        showDetails: async () => {
+        showDetails: async (user) => {
             const FORMSTAFF = document.querySelector('#formStaff');
             let privateStaffStorage = "";
             if (localStorage.getItem('staffKey')) {
@@ -30,6 +30,41 @@ async function FormStaffData() {
                     document.getElementById('r1').checked = true;
                 }
             }
+
+            async function getAdminAreaData() {
+                const response = await fetch(`/fetch_area_adminarea/`);
+                const data = await response.json();
+                return data.area;
+            }
+            let areaAdmin =  await getAdminAreaData();
+            console.log(areaAdmin)
+            console.log(getUserType(user))
+            if(areaAdmin === 'AA'){
+                selectElement = document.getElementById('area');
+                const optionElement = document.createElement('option');
+                setAttributes(optionElement, {
+                    value: areaAdmin,
+                });
+                optionElement.innerHTML = 'Almacen';
+                selectElement.appendChild(optionElement);
+            } else if(areaAdmin === 'AC'){
+                selectElement = document.getElementById('area');
+                const optionElement = document.createElement('option');
+                setAttributes(optionElement, {
+                    value: areaAdmin,
+                });
+                optionElement.innerHTML = 'Almacen';
+                selectElement.appendChild(optionElement);
+            } else if(areaAdmin === 'AV'){
+                selectElement = document.getElementById('area');
+                const optionElement = document.createElement('option');
+                setAttributes(optionElement, {
+                    value: areaAdmin,
+                });
+                optionElement.innerHTML = 'Almacen';
+                selectElement.appendChild(optionElement);
+            }
+
 
             FORMSTAFF.addEventListener('submit', async (e) => {
                 e.preventDefault();

@@ -29,7 +29,7 @@ function FormDataFactory(){
         if(type === '/form-purchases/') return FormPurchasesData(user);
         if(type === '/form-stock/') return FormStockData();
         if(type === '/form-products/') return FormProductData();
-        if(type === '/form-staff/') return FormStaffData();
+        if(type === '/form-staff/') return FormStaffData(user);
         if(type === '/form-staff-admin/') return FormStaffAdminData();
     }
 }

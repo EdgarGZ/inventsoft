@@ -33,7 +33,6 @@
 <script>
     (async function(){
 
-    // Include HTML modals
         document.body.innerHTML += showOptionModal('¿Eliminar registro?');
         document.body.innerHTML += includeModal();
 
@@ -51,23 +50,53 @@
         
     // ------------------------------------------------
         // Get table data
+        async function getPurchasesData(url) {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.sales;
+        }
+        
         let data;
         if(getUserType(user) == 0 || getUserType(user) == 1){
-            data = await getData('http://127.0.0.1:8000/fetch_purchases/1/');
+            data = await getPurchasesData('http://127.0.0.1:8000/fetch_purchases/1/');
         } else if(getUserType(user) == 2){
-            data = await getData(`http://127.0.0.1:8000/fetch_purchases/2/${user.emp_key}/`);
+            console.log(user)
+            data = await getPurchasesData(`http://127.0.0.1:8000/fetch_purchases/2/${user.emp_key}/`);
         }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
     // ------------------------------------------------
         // Show table data and specific options for that user type
-        document.body.innerHTML += factoryTableViewPurchases(user, data.sales);
-        
-        // Delete buttons functionality
-        addDeleteOptions();
+        document.body.innerHTML += factoryTableViewPurchases(user, data);
+
+        const DELETEBUTTONS = document.querySelectorAll('#delete');
+
+        for(let deleteButton of DELETEBUTTONS){
+            deleteButton.addEventListener('click', async(e) => {
+                e.preventDefault();
+
+                changeClass('modal-back-show', 'modal-options');
+                
+                document.getElementById('ok').onclick = async function(){
+
+                    changeClass('modal-back-show', 'modal-options');
+                
+                    const purchaseKey = deleteButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
+                    try{
+                        const data = await sendData(`http://127.0.0.1:8000/delete_purchase/${purchaseKey}/`);
+                        if (data.status === 200){
+                            // alert('Se elimino el registro')
+                            deleteButton.parentElement.parentElement.remove();
+                            showSuccessModal('Registro eliminado <br> exitosamente', 'fas fa-check-circle');
+                        } else {
+                            showSuccessModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times');
+                        }
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+            })
+        }
 
     // -----------------------------
         // Get CSV

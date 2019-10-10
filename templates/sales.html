@@ -32,8 +32,7 @@
 
 <script>
     (async function(){
-     
-    // Include HTML modals
+        
         document.body.innerHTML += showOptionModal('¿Eliminar registro?');
         document.body.innerHTML += includeModal();
 
@@ -51,23 +50,58 @@
     
     // ------------------------------------------------
         // Get table data
+        async function getSalesData(url) {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.sales;
+        }
+        
         let data;
         if(getUserType(user) == 0 || getUserType(user) == 1){
-            data = await getData('http://127.0.0.1:8000/fetch_sales/1/');
+            console.log('si')
+            data = await getSalesData('http://127.0.0.1:8000/fetch_sales/1/');
         } else if(getUserType(user) == 2){
-            data = await getData(`http://127.0.0.1:8000/fetch_sales/2/${user.emp_key}/`);
+            console.log(user)
+            console.log('ni')
+            data = await getSalesData(`http://127.0.0.1:8000/fetch_sales/2/${user.emp_key}/`);
         }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
     // ------------------------------------------------
         // Show table data and specific options for that user type
-        document.body.innerHTML += factoryTableViewSales(user, data.sales);
-        
-        // Delete buttons functionality
-        addDeleteOptions();
+        document.body.innerHTML += factoryTableViewSales(user, data);
+
+        const DELETEBUTTONS = document.querySelectorAll('#delete');
+
+        for(let deleteButton of DELETEBUTTONS){
+            deleteButton.addEventListener('click', async(e) => {
+                e.preventDefault();
+
+                changeClass('modal-back-show', 'modal-options');
+                
+                document.getElementById('ok').onclick = async function(){
+
+                    changeClass('modal-back-show', 'modal-options');
+                
+                    const saleKey = deleteButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
+                    console.log(saleKey)
+                    try{
+                        const data = await sendData(`http://127.0.0.1:8000/delete_sale/${saleKey}/`);
+                        console.log(data);
+                        if (data.status === 200){
+                            deleteButton.parentElement.parentElement.remove();
+                            showSuccessModal('Registro eliminado <br> exitosamente', 'fas fa-check-circle');
+                        } else {
+                            showSuccessModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times');
+                        }
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+            })
+        }
+
+
 
     // -----------------------------
         // Get CSV

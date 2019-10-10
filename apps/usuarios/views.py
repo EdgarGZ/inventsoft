@@ -822,3 +822,17 @@ def csv_save_to_disk(request, type_csv):
             data['status'] = 200
         
         return JsonResponse(data)
+
+
+@login_required
+def fetch_area_adminarea(request):
+    data = {}
+    print(request.session['user']['emp_key'][1:3])
+    if request.session['user']['emp_key'][1:3] == 'AA':
+        data['area'] = 'AA'
+    elif request.session['user']['emp_key'][1:3] == 'AV':
+        data['area'] = 'AV'
+    if request.session['user']['emp_key'][1:3] == 'AC':
+        data['area'] = 'AC'
+
+    return JsonResponse(data)

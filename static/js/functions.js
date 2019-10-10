@@ -6,17 +6,6 @@ async function sendData(url){
     return data;
 }
 
-<<<<<<< HEAD
-// *** async function getData();
-// Get data from server side
-async function getData(url) {
-    const response = await fetch(url);
-    const data = await response.json();
-    return data;
-}
-
-=======
->>>>>>> master
 // *** async function getUserData();
 // Get user data from server side
 async function getUserData() {
@@ -105,51 +94,6 @@ const getUserType = (user) => {
                                 ).create(type);
         return view.template;
     } 
-
-
-// ----------- Tabla options (DELETE/EDIT) ------------------
-
-    // *** addDeleteOptions()
-    // For each row data add delete functionality
-    async function addDeleteOptions(){
-        
-        const DELETEBUTTONS = document.querySelectorAll('#delete');
-
-        for(let deleteButton of DELETEBUTTONS){
-            deleteButton.addEventListener('click', async(e) => {
-                e.preventDefault();
-                changeClass('modal-back-show', 'modal-options');
-                document.getElementById('ok').onclick = async function(){
-                    changeClass('modal-back-show', 'modal-options');
-                    const productKey = deleteButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
-                    try{
-                        const data = await sendData(`http://127.0.0.1:8000/delete_product/${productKey}/`);
-                        if (data.status === 200){
-                            deleteButton.parentElement.parentElement.remove();
-                            showSuccessModal('Registro eliminado <br> exitosamente', 'fas fa-check-circle');
-                        } else {
-                            showSuccessModal('Ocurrió un error, <br> intenta de nuevo', 'fas fa-times');
-                        }
-                    } catch (error) {
-                        console.log(error)
-                    }
-                }
-            })
-        }
-    }
-
-    // *** addEditOptions()
-    // For each row data add edit functionality
-    async function addEditOptions(element){
-    const EDITBUTTONS = document.querySelectorAll('.edit-row');
-        for(let editButton of EDITBUTTONS){
-            editButton.addEventListener('click', async(e) => {
-                const elementKey = editButton.parentElement.parentElement.firstChild.nextElementSibling.innerText;
-                console.log(elementKey)
-                localStorage.setItem(element, elementKey);
-            })
-        }
-    }
 
 // ----------- Form Views ------------------
     
@@ -257,9 +201,4 @@ async function getCSV(urlData){
         }
 
     })
-<<<<<<< HEAD
 }
-
-=======
-}
->>>>>>> master

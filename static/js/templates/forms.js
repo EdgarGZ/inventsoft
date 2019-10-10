@@ -143,7 +143,7 @@ function ViewFormStaff(){
                                     <div id="quitar" class="type-user">
                                         <p>Tipo de usuario:</p>
                                         <div class="option-user">
-                                            <input type="radio" name="type-user" id="" value="employee" checked disabled>
+                                            <input type="radio" name="type-user" id="r1" value="employee" checked disabled>
                                             <span>Empleado</span>
                                         </div>
                                     </div>

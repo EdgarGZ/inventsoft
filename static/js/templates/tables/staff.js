@@ -15,7 +15,6 @@ function ViewAdminAreaStaffTable(data){
                         <table class="table table-container" id="table">
                             <thead>
                                 <th scope="col">Id</th>
-                                <th scope="col">Acciones</th>
                                 <th scope="col">Correo</th>
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Apellido(s)</th>
